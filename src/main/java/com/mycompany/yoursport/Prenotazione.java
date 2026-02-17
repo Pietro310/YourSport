@@ -64,7 +64,11 @@ public class Prenotazione {
 
     @Override
     public String toString() {
+        // Assicurati che non ci siano eccezioni qui
         return "Prenotazione [" + stato + "] per " + struttura.getNome() + 
-               " | Costo: " + String.format("%.2f", costoTotale) + "€ | Utente: " + sportivo.getNome();
+               " | Data: " + data + 
+               " | Orario: " + oraInizio + "-" + oraFine +
+               " | Posti: " + numeroPosti +
+               " | Costo Totale: " + String.format("%.2f", costoTotale) + "€";
     }
 }

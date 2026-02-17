@@ -10,6 +10,19 @@ package com.mycompany.yoursport;
  */
 
 
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+/**
+ *
+ * @author anton
+ */
+
+/*
+ * Main.java - Test Driver per UC2
+ */
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -19,99 +32,94 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // 1. Inizializzazione Sistema
         YourSport sistema = YourSport.getInstance();
         Scanner scanner = new Scanner(System.in);
 
-        // 2. Login
-        System.out.println("=== BENVENUTO IN YOURSPORT ===");
-        System.out.print("Login (premi Invio per U1 default): ");
-        String user = scanner.nextLine();
-        if(user.isEmpty()) user = "U1";
-        sistema.login(user); 
+        // Pre-condizione: Login
+        sistema.login("U1"); 
 
         boolean continua = true;
         while (continua) {
             try {
-                System.out.println("\n----------------------------------");
-                System.out.println("=== NUOVA PRENOTAZIONE ===");
+                System.out.println("\n==========================================");
+                System.out.println("      NUOVO FLUSSO DI PRENOTAZIONE (UC2)  ");
+                System.out.println("==========================================");
                 
-               // 1. Input Tipologia (Reso opzionale)
-                 System.out.print("Cosa vuoi giocare? (Calcetto, Tennis... o premi Invio per tutto): ");
-                 String tipologia = scanner.nextLine().trim(); // .trim() toglie spazi vuoti
+                // --- PASSO 1: INSERISCI TIPOLOGIA ---
+                System.out.print("1. Tipologia (es. Piscina, Tennis - Invio per tutto): ");
+                String tipologia = scanner.nextLine().trim();
 
-                 // 2. Input Caratteristiche (NUOVO)
-                 System.out.print("Caratteristiche richieste (es. Doccia,Luci... o premi Invio per nessuna): ");
-                 String carInput = scanner.nextLine().trim();
+                // --- PASSO 2: INSERISCI CARATTERISTICHE ---
+                System.out.print("2. Caratteristiche (es. Doccia - Invio per nessuna): ");
+                String carInput = scanner.nextLine().trim();
+                List<String> caratteristiche = new ArrayList<>();
+                if (!carInput.isEmpty()) {
+                    String[] carArray = carInput.split(",");
+                    for (String c : carArray) caratteristiche.add(c.trim());
+                }
 
-                 List<String> caratteristiche = new ArrayList<>();
-                 if (!carInput.isEmpty()) {
-                // Trasforma la stringa "Doccia, Luci" in una Lista ["Doccia", "Luci"]
-                String[] carArray = carInput.split(",");
-                for (String c : carArray) {
-                caratteristiche.add(c.trim()); // Aggiunge pulendo gli spazi
-    }
-}
-                
-                // Richiesta DATA (Modifica richiesta)
-                System.out.print("Inserisci la data (formato YYYY-MM-DD, es. 2026-02-20): ");
+                // --- PASSO 3: INSERISCI DATA ---
+                System.out.print("3. Data (YYYY-MM-DD): ");
                 String dataStr = scanner.nextLine();
-                LocalDate dataScelta = LocalDate.parse(dataStr); // Converte la stringa in Data
+                LocalDate dataScelta = LocalDate.parse(dataStr);
 
-                // --- RICERCA (UC2) ---
-                
+                // --- PASSO 4: SISTEMA MOSTRA DISPONIBILITÀ ---
+                // Qui mostriamo tutto ciò che esiste per quel giorno. 
+                // Non filtriamo ancora per orario.
                 List<Struttura> risultati = sistema.cercaStruttura(tipologia, caratteristiche, dataScelta);
                 
-                System.out.println("\nStrutture disponibili per il " + dataScelta + ":");
+                System.out.println("\n--- RISULTATI RICERCA ---");
                 for (Struttura s : risultati) {
-                    System.out.println(" -> ID: " + s.getId() + " | " + s.getNome() + 
-                                       " | Max Posti: " + s.getCapienza() + 
-                                       " | Tariffa: " + s.getTariffa() + " euro");
+                    System.out.println(" -> ID: [" + s.getId() + "] " + s.getNome() + 
+                                       " (" + s.getTipologia() + ") | Capienza Totale: " + s.getCapienza());
                 }
 
                 if (risultati.isEmpty()) {
-                    System.out.println("Nessuna struttura trovata per i criteri inseriti.");
+                    System.out.println("Nessuna struttura trovata con questi filtri.");
                 } else {
-                    // --- SELEZIONE RISORSA ---
-                    System.out.println("\n--- COMPILA LA PRENOTAZIONE ---");
-                    System.out.print("Inserisci ID Struttura da prenotare: ");
+                    // --- PASSO 5: INSERISCI FASCIA ORARIA ---
+                    System.out.println("\n--- SPECIFICA ORARIO ---");
+                    
+                    System.out.print("4. ID Struttura da prenotare: ");
                     String id = scanner.nextLine();
                     
-                    System.out.print("Ora Inizio (HH:mm, es. 18:00): ");
+                    System.out.print("5. Ora Inizio (HH:mm): ");
                     LocalTime inizio = LocalTime.parse(scanner.nextLine());
                     
-                    System.out.print("Ora Fine (HH:mm, es. 19:30): ");
+                    System.out.print("6. Ora Fine (HH:mm): ");
                     LocalTime fine = LocalTime.parse(scanner.nextLine());
                     
-                    System.out.print("Numero persone/posti: ");
+                    // --- PASSO 7: SELEZIONA POSTI ---
+                    System.out.print("7. Numero persone/posti: ");
                     int posti = Integer.parseInt(scanner.nextLine());
 
-                    // Chiamata al sistema usando la data scelta
+                    // --- PASSO 6 (Backend): VERIFICA DISPONIBILITÀ REALE ---
                     Prenotazione p = sistema.selezionaRisorsa(id, dataScelta, inizio, fine, posti);
 
                     if (p != null) {
-                        System.out.println("\nRIEPILOGO COSTO: " + p); // Chiama il toString di Prenotazione
+                        System.out.println("\n--- RIEPILOGO PRENOTAZIONE ---");
+                        System.out.println(p); 
                         
-                        System.out.print("Vuoi CONFERMARE la prenotazione? (si/no): ");
+                        // --- PASSO 8: CONFERMA ---
+                        System.out.print("8. Vuoi CONFERMARE? (si/no): ");
                         if (scanner.nextLine().equalsIgnoreCase("si")) {
                             sistema.confermaPrenotazione();
                         } else {
-                            System.out.println("Prenotazione annullata.");
+                            System.out.println("Annullato.");
                         }
+                    } else {
+                        System.out.println("!!! IMPOSSIBILE PROCEDERE: Risorsa non disponibile in quell'orario !!!");
                     }
                 }
 
             } catch (DateTimeParseException e) {
-                System.out.println("ERRORE FORMATO DATA/ORA! Usa il formato corretto (YYYY-MM-DD o HH:mm).");
+                System.out.println("ERRORE: Formato data o ora non valido!");
             } catch (Exception e) {
-                System.out.println("ERRORE GENERICO: " + e.getMessage());
+                System.out.println("ERRORE: " + e.getMessage());
             }
 
-            System.out.print("\nVuoi effettuare un'altra ricerca? (si/no): ");
-            if (!scanner.nextLine().equalsIgnoreCase("si")) {
-                continua = false;
-            }
+            System.out.print("\nVuoi fare un'altra prenotazione? (si/no): ");
+            if (!scanner.nextLine().equalsIgnoreCase("si")) continua = false;
         }
-        System.out.println("Arrivederci!");
     }
 }

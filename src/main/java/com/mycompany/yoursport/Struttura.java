@@ -19,7 +19,7 @@ public class Struttura {
     private int capienza;
     private double costoBase;
     private boolean isOperativo;
-    private String tipoTariffa;
+    private String tipoTariffa; // "ORARIO" o "PERSONA"
 
     public Struttura(String id, String nome, String tipologia, List<String> caratteristiche, 
                      int capienza, double costoBase, boolean isOperativo, String tipoTariffa) {
@@ -33,38 +33,56 @@ public class Struttura {
         this.tipoTariffa = tipoTariffa;
     }
 
-public boolean corrisponde(String tipologiaRichiesta, List<String> caratteristicheRichieste) {
-    // 1. Controllo Tipologia: Se l'utente lascia vuoto, va bene tutto. Altrimenti deve coincidere.
-    boolean tipoMatch;
-    if (tipologiaRichiesta == null || tipologiaRichiesta.isEmpty()) {
-        tipoMatch = true; // Filtro disattivato, accetta tutto
-    } else {
-        tipoMatch = this.tipologia.equalsIgnoreCase(tipologiaRichiesta);
+    // Metodo di business logic per il filtro
+    public boolean corrisponde(String tipologiaRichiesta, List<String> caratteristicheRichieste) {
+        // 1. Controllo Tipologia (se vuota, accetta tutto)
+        boolean tipoMatch;
+        if (tipologiaRichiesta == null || tipologiaRichiesta.isEmpty()) {
+            tipoMatch = true;
+        } else {
+            tipoMatch = this.tipologia.equalsIgnoreCase(tipologiaRichiesta);
+        }
+        
+        // 2. Controllo Caratteristiche (se vuota, accetta tutto)
+        boolean carattMatch;
+        if (caratteristicheRichieste == null || caratteristicheRichieste.isEmpty()) {
+            carattMatch = true;
+        } else {
+            carattMatch = this.caratteristiche.containsAll(caratteristicheRichieste);
+        }
+        
+        return tipoMatch && carattMatch && isOperativo;
     }
-    
-    // 2. Controllo Caratteristiche: La struttura deve avere TUTTE le caratteristiche richieste
-    boolean carattMatch;
-    if (caratteristicheRichieste == null || caratteristicheRichieste.isEmpty()) {
-        carattMatch = true; // Nessuna caratteristica richiesta
-    } else {
-        // containsAll verifica se la struttura possiede TUTTI gli elementi della lista richiesta
-        // Esempio: Cerco "Doccia". La struttura ha "Doccia, Luci". -> TRUE
-        carattMatch = this.caratteristiche.containsAll(caratteristicheRichieste);
-    }
-    
-    // Restituisce true solo se entrambi i controlli passano e la struttura è operativa
-    return tipoMatch && carattMatch && isOperativo;
-}
 
-    // --- GETTERS (Questi mancavano e causavano errore) ---
-    public String getId() { return id; }
-    public String getNome() { return nome; }
-    public int getCapienza() { return capienza; } // <--- ECCOLO!
-    public double getTariffa() { return costoBase; }
-    public String getTipoTariffa() { return tipoTariffa; }
+    // --- GETTERS (Quelli che causavano l'errore se mancanti o vuoti) ---
     
+    public String getId() { 
+        return id; 
+    }
+
+    public String getNome() { 
+        return nome; 
+    }
+
+    public String getTipologia() { 
+        return tipologia; 
+    }
+
+    public int getCapienza() { 
+        return capienza; 
+    }
+
+    public double getTariffa() { 
+        return costoBase; 
+    }
+
+    public String getTipoTariffa() { 
+        return tipoTariffa; 
+    }
+    
+    // Per stampare l'oggetto in modo leggibile (se serve)
     @Override
     public String toString() {
-        return nome + " (" + tipologia + ") - " + costoBase + "€";
+        return nome + " (" + tipologia + ") - Capienza: " + capienza + " - Costo: " + costoBase + "€";
     }
 }
