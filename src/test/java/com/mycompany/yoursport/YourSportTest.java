@@ -35,6 +35,8 @@ public class YourSportTest {
         sistema.resetSistemaPerTest();
     }
 
+    //ITERAZIONE 1 (UC2)
+    
     // --- TEST 1: LA RICERCA (Filtro Catalogo) ---
     @Test
     public void testCercaStruttura() {
@@ -173,4 +175,84 @@ public void testRicercaNessunRisultato() {
         assertTrue(risultati.isEmpty(), "La lista dovrebbe essere vuota per sport inesistenti");
         System.out.println("---------------------------------------------------");
     }
+
+ //ITERAZIONE 2 (UC3)
+  
+ @Test
+    public void testMostraCatalogo() {
+        // Esecuzione
+        List<Struttura> catalogo = sistema.mostraCatalogo();
+
+        // Verifica: Il catalogo non deve essere nullo e deve contenere le strutture di test
+        assertNotNull(catalogo, "Il catalogo non dovrebbe essere nullo");
+        assertTrue(catalogo.size() >= 2, "Il catalogo dovrebbe contenere almeno le 2 strutture di test");
+    }
+
+    @Test
+    public void testMostraDettagliStruttura_Esistente() {
+        // Esecuzione
+        String dettagli = sistema.mostraDettagliStruttura("S1");
+
+        // Verifica: La stringa restituita non deve essere un messaggio d'errore
+        assertFalse(dettagli.contains("Errore"), "Non dovrebbe dare errore per una struttura esistente");
+        assertTrue(dettagli.contains("Campo A"), "I dettagli dovrebbero contenere il nome della struttura");
+        assertTrue(dettagli.contains("20.0"), "I dettagli dovrebbero contenere il costo base attuale");
+    }
+
+    @Test
+    public void testMostraDettagliStruttura_Inesistente() {
+        // Esecuzione
+        String dettagli = sistema.mostraDettagliStruttura("S999");
+
+        // Verifica: Deve restituire il messaggio di errore previsto nel codice
+        assertTrue(dettagli.contains("Errore: Struttura inesistente"), "Dovrebbe dare errore per un ID inesistente");
+    }
+
+    @Test
+    public void testAggiornaTariffa_Successo() {
+        // Setup: recuperiamo S1 e verifichiamo lo stato iniziale
+        Struttura s1 = sistema.getStruttura("S1");
+        assertEquals(20.0, s1.getTariffa());
+        assertEquals("ORARIO", s1.getTipoTariffa());
+
+        // Esecuzione: l'Admin imposta a PERSONA e cambia il prezzo a 25.0
+        sistema.aggiornaTariffa("S1", "PERSONA", 25.0);
+
+        // Verifica: I valori devono essersi aggiornati (Post-condizioni del Contratto Operazione soddisfatte)
+        assertEquals(25.0, s1.getTariffa(), "Il costo base dovrebbe essersi aggiornato a 25.0");
+        assertEquals("PERSONA", s1.getTipoTariffa(), "Il tipo tariffa dovrebbe essersi aggiornato a PERSONA");
+        
+        // Teardown manuale per non sporcare i test successivi (visto che è un Singleton)
+        sistema.aggiornaTariffa("S1", "ORARIO", 20.0);
+    }
+
+    @Test
+    public void testAggiornaTariffa_ErroreCostoNegativo_Estensione3a() {
+        // Setup
+        Struttura s1 = sistema.getStruttura("S1");
+        double costoIniziale = s1.getTariffa();
+
+        // Esecuzione: l'Admin tenta di inserire un costo negativo
+        sistema.aggiornaTariffa("S1", "ORARIO", -5.0);
+
+        // Verifica: Il costo NON deve essere cambiato (l'aggiornamento è stato bloccato)
+        assertEquals(costoIniziale, s1.getTariffa(), "Il costo base NON deve cambiare se si inserisce un valore negativo");
+    }
+
+    @Test
+    public void testAggiornaTariffa_ErroreTipoInvalido() {
+        // Setup
+        Struttura s1 = sistema.getStruttura("S1");
+        String tipoIniziale = s1.getTipoTariffa();
+
+        // Esecuzione: l'Admin tenta di inserire un tipo di tariffa non contemplato
+        sistema.aggiornaTariffa("S1", "TESTVAL", 30.0);
+
+        // Verifica: Il tipo di tariffa NON deve essere cambiato
+        assertEquals(tipoIniziale, s1.getTipoTariffa(), "Il tipo tariffa NON deve cambiare se si inserisce un valore non valido");
+        // Verifica secondaria: anche il prezzo non deve essere cambiato (Fail Fast)
+        assertEquals(20.0, s1.getTariffa(), "Il costo base non deve aggiornarsi se il tipo tariffa era invalido");
+    }
+
+
 }
