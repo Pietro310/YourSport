@@ -31,13 +31,49 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         YourSport sistema = YourSport.getInstance();
         Scanner scanner = new Scanner(System.in);
 
-        // Pre-condizione: Login
-        sistema.login("U1"); 
+        boolean esci = false;
 
+        while (!esci) {
+            System.out.println("\n==========================================");
+            System.out.println("       BENVENUTO IN YOURSPORT             ");
+            System.out.println("==========================================");
+            System.out.println("1. Accedi come Sportivo (Test UC2 - Prenotazione)");
+            System.out.println("2. Accedi come Admin    (Test UC3 - Gestione Costi)");
+            System.out.println("3. Esci dal sistema");
+            System.out.print("Scegli un'opzione: ");
+            
+            String scelta = scanner.nextLine().trim();
+
+            switch (scelta) {
+                case "1":
+                    gestisciSportivo(sistema, scanner);
+                    break;
+                case "2":
+                    gestisciAdmin(sistema, scanner);
+                    break;
+                case "3":
+                    esci = true;
+                    System.out.println("Uscita dal sistema...");
+                    break;
+                default:
+                    System.out.println("Opzione non valida. Riprova.");
+            }
+        }
+        scanner.close();
+    }
+
+    // ==========================================================
+    // FLUSSO UC2: PRENOTAZIONE STRUTTURA (Codice Originale)
+    // ==========================================================
+    private static void gestisciSportivo(YourSport sistema, Scanner scanner) {
+        // Pre-condizione: Login fittizio
+        sistema.login("U1"); 
+        
         boolean continua = true;
         while (continua) {
             try {
@@ -64,8 +100,6 @@ public class Main {
                 LocalDate dataScelta = LocalDate.parse(dataStr);
 
                 // --- PASSO 4: SISTEMA MOSTRA DISPONIBILITÀ ---
-                // Qui mostriamo tutto ciò che esiste per quel giorno. 
-                // Non filtriamo ancora per orario.
                 List<Struttura> risultati = sistema.cercaStruttura(tipologia, caratteristiche, dataScelta);
                 
                 System.out.println("\n--- RISULTATI RICERCA ---");
@@ -120,6 +154,63 @@ public class Main {
 
             System.out.print("\nVuoi fare un'altra prenotazione? (si/no): ");
             if (!scanner.nextLine().equalsIgnoreCase("si")) continua = false;
+        }
+    }
+
+    // ==========================================================
+    // FLUSSO UC3: GESTIONE COSTI (Nuovo Codice per l'Admin)
+    // ==========================================================
+    private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
+        System.out.println("\n==========================================");
+        System.out.println("     PANNELLO ADMIN - GESTIONE TARIFFE    ");
+        System.out.println("==========================================");
+        
+        boolean continuaAdmin = true;
+        
+        // Loop del Sequence Diagram
+        while (continuaAdmin) {
+            // Operazione 1: mostraCatalogo
+            System.out.println("\n--- CATALOGO STRUTTURE ---");
+            List<Struttura> catalogo = sistema.mostraCatalogo();
+            for (Struttura s : catalogo) {
+                System.out.println(" - ID: [" + s.getId() + "] " + s.getNome() + " (" + s.getTipologia() + ")");
+            }
+
+            System.out.print("\nInserisci l'ID della struttura da modificare (o 'esci' per tornare al menu): ");
+            String idTarget = scanner.nextLine().trim();
+            
+            if (idTarget.equalsIgnoreCase("esci")) {
+                break;
+            }
+
+            // Operazione 2: mostraDettagliStruttura
+            String dettagli = sistema.mostraDettagliStruttura(idTarget);
+            System.out.println("\n--- Dettagli Attuali ---");
+            System.out.println(dettagli);
+
+            // Se la struttura esiste, procedo con l'aggiornamento
+            if (!dettagli.contains("Errore")) {
+                System.out.print("\nInserisci il nuovo Tipo di Tariffa (es. ORARIO o PERSONA): ");
+                String nuovoTipo = scanner.nextLine().trim();
+
+                System.out.print("Inserisci il nuovo Costo Base (es. per provare l'errore inserisci -5): ");
+                double nuovoCosto = -1;
+                try {
+                    // Gestisce sia il punto che la virgola per i decimali inseriti da tastiera
+                    nuovoCosto = Double.parseDouble(scanner.nextLine().replace(",", "."));
+                } catch (NumberFormatException e) {
+                    System.out.println("Formato numero non valido. Il sistema tenterà con un valore negativo per testare i controlli.");
+                }
+
+                // Operazione 3: aggiornaTariffa (Qui dentro avviene il controllo costoBase >= 0)
+                System.out.println("\nElaborazione richiesta...");
+                sistema.aggiornaTariffa(idTarget, nuovoTipo, nuovoCosto);
+            }
+
+            System.out.print("\nVuoi modificare un'altra tariffa? (si/no): ");
+            if (!scanner.nextLine().equalsIgnoreCase("si")) {
+                continuaAdmin = false;
+            }
         }
     }
 }

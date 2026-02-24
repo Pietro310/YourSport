@@ -8,25 +8,26 @@ package com.mycompany.yoursport;
  *
  * @author anton
  */
+import java.util.ArrayList;
 import java.util.List;
 
-public class Sportivo {
-    private String id;
-    private String nome;
-    private String cognome;
-    private String email;
-    private String password;
+public class Sportivo extends Utente {
+    
+    // Associazione 0..* verso Prenotazione (riservata solo allo Sportivo)
+    private List<Prenotazione> prenotazioni;
 
+    // Costruttore: passa i parametri al padre (Utente) tramite super()
     public Sportivo(String id, String nome, String cognome, String email, String password) {
-        this.id = id;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = email;
-        this.password = password;
+        super(id, nome, cognome, email, password);
+        this.prenotazioni = new ArrayList<>();
     }
 
-    // Getters
-    public String getNome() { return nome; }
-    public String getId() { return id; }
-    // ... altri getter e setter se servono
+    // Metodi per gestire le prenotazioni dello sportivo
+    public List<Prenotazione> getPrenotazioni() {
+        return prenotazioni;
+    }
+
+    public void addPrenotazione(Prenotazione p) {
+        this.prenotazioni.add(p);
+    }
 }

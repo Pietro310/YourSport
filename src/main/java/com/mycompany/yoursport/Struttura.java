@@ -85,4 +85,27 @@ public class Struttura {
     public String toString() {
         return nome + " (" + tipologia + ") - Capienza: " + capienza + " - Costo: " + costoBase + "€";
     }
+    
+   // NUOVI METODI PER UC3 (Gestione Costi)
+    public void setTipoTariffa(String tipoTariffa) {
+        this.tipoTariffa = tipoTariffa;
+    }
+
+    public void setCostoBase(double costoBase) {
+        this.costoBase = costoBase;
+    }
+    
+public String getDettagli() {
+        String stato = isOperativo ? "Operativa" : "Chiusa/In Manutenzione";
+        return "====================================\n" +
+               "ID Struttura: " + id + "\n" +
+               "Nome: " + nome + " (" + tipologia + ")\n" +
+               "Caratteristiche: " + caratteristiche + "\n" +
+               "Capienza Massima: " + capienza + " posti\n" +
+               "Stato Attuale: " + stato + "\n" +
+               "--- TARIFFE IMPOSTATE ---\n" +
+               "Tipo Tariffa: " + tipoTariffa + "\n" +
+               "Costo Base: " + costoBase + "€\n" +
+               "====================================";
+    }
 }
