@@ -10,65 +10,92 @@ package com.mycompany.yoursport;
  */
 
 
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
+import java.time.Duration;
+import java.util.UUID;
 
 public class Prenotazione {
+    
+    // Il famoso ID mancante!
+    private String id;
+    
     private Struttura struttura;
     private Sportivo sportivo;
-
-    private String id;
     private LocalDate data;
     private LocalTime oraInizio;
     private LocalTime oraFine;
     private int numeroPosti;
-    private double costoTotale;
     private String stato;
+    private double costoTotale;
 
-    public Prenotazione(Struttura struttura, Sportivo sportivo, LocalDate data, 
-                        LocalTime oraInizio, LocalTime oraFine, int numeroPosti) {
+    public Prenotazione(Struttura struttura, Sportivo sportivo, LocalDate data, LocalTime oraInizio, LocalTime oraFine, int numeroPosti) {
+        // Generiamo automaticamente un ID univoco (es. "PRN-7b3f9a")
+        this.id = "PRN-" + UUID.randomUUID().toString().substring(0, 6);
+        
         this.struttura = struttura;
         this.sportivo = sportivo;
         this.data = data;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
         this.numeroPosti = numeroPosti;
-        this.stato = "Bozza"; 
-        this.id = "PREN-" + System.currentTimeMillis();
+        this.stato = "In attesa"; // Stato di default
     }
 
     public void calcolaCostoTotale() {
-        double tariffa = struttura.getTariffa();
-        long minuti = ChronoUnit.MINUTES.between(oraInizio, oraFine);
-        double ore = minuti / 60.0;
-
         if ("ORARIO".equalsIgnoreCase(struttura.getTipoTariffa())) {
-            this.costoTotale = tariffa * ore;
+            // Calcolo costo basato sulle ore
+            long ore = Duration.between(oraInizio, oraFine).toHours();
+            if (ore == 0) ore = 1; // Minimo 1 ora
+            this.costoTotale = ore * struttura.getCostoBase();
         } else {
-            this.costoTotale = tariffa * ore * numeroPosti;
+            // Calcolo costo basato sul numero di persone
+            this.costoTotale = numeroPosti * struttura.getCostoBase();
         }
     }
 
-    public void setStato(String nuovoStato) {
-        this.stato = nuovoStato;
+    // ==========================================
+    // GETTER & SETTER
+    // ==========================================
+    
+    public String getId() {
+        return id;
     }
 
-    // --- GETTERS (Fondamentali per i controlli in YourSport) ---
-    public Struttura getStruttura() { return struttura; }
-    public LocalDate getData() { return data; }
-    public LocalTime getOraInizio() { return oraInizio; }
-    public LocalTime getOraFine() { return oraFine; }
-    public int getNumeroPosti() { return numeroPosti; }
-    public String getStato() { return stato; }
+    public Struttura getStruttura() {
+        return struttura;
+    }
 
-    @Override
-    public String toString() {
-        // Assicurati che non ci siano eccezioni qui
-        return "Prenotazione [" + stato + "] per " + struttura.getNome() + 
-               " | Data: " + data + 
-               " | Orario: " + oraInizio + "-" + oraFine +
-               " | Posti: " + numeroPosti +
-               " | Costo Totale: " + String.format("%.2f", costoTotale) + "€";
+    public Sportivo getSportivo() {
+        return sportivo;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public LocalTime getOraInizio() {
+        return oraInizio;
+    }
+
+    public LocalTime getOraFine() {
+        return oraFine;
+    }
+
+    public int getNumeroPosti() {
+        return numeroPosti;
+    }
+
+    public String getStato() {
+        return stato;
+    }
+
+    public void setStato(String stato) {
+        this.stato = stato;
+    }
+
+    public double getCostoTotale() {
+        return costoTotale;
     }
 }

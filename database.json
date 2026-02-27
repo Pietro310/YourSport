@@ -1,0 +1,200 @@
+{
+  "catalogoStrutture": [
+    {
+      "id": "S1",
+      "nome": "Campo A",
+      "tipologia": "Tennis",
+      "caratteristiche": [
+        "Terra Rossa"
+      ],
+      "capienza": 1,
+      "costoBase": 30.0,
+      "disponibile": true,
+      "tipoTariffa": "ORARIO"
+    },
+    {
+      "id": "S2",
+      "nome": "Piscina Comunale",
+      "tipologia": "Piscina",
+      "caratteristiche": [
+        "Doccia"
+      ],
+      "capienza": 20,
+      "costoBase": 8.0,
+      "disponibile": true,
+      "tipoTariffa": "PERSONA"
+    }
+  ],
+  "archivioPrenotazioni": [
+    {
+      "id": "PRN-f74b0b",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA"
+      },
+      "sportivo": {
+        "id": "U1",
+        "nome": "Mario",
+        "cognome": "Rossi",
+        "email": "mario@email.it",
+        "password": "pw"
+      },
+      "data": "2026-03-01",
+      "oraInizio": "15:00",
+      "oraFine": "16:00",
+      "numeroPosti": 15,
+      "stato": "Confermata",
+      "costoTotale": 120.0
+    },
+    {
+      "id": "PRN-d82906",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA"
+      },
+      "sportivo": {
+        "id": "U1",
+        "nome": "Mario",
+        "cognome": "Rossi",
+        "email": "mario@email.it",
+        "password": "pw"
+      },
+      "data": "2026-03-01",
+      "oraInizio": "15:00",
+      "oraFine": "16:00",
+      "numeroPosti": 4,
+      "stato": "Confermata",
+      "costoTotale": 32.0
+    },
+    {
+      "id": "PRN-bf74c1",
+      "struttura": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 20.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "test@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-02-27",
+      "oraInizio": "19:00",
+      "oraFine": "20:00",
+      "numeroPosti": 1,
+      "stato": "Confermata",
+      "costoTotale": 20.0
+    },
+    {
+      "id": "PRN-8c7f97",
+      "struttura": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 20.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "test@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-02-24",
+      "oraInizio": "12:00",
+      "oraFine": "15:00",
+      "numeroPosti": 1,
+      "stato": "Confermata",
+      "costoTotale": 60.0
+    },
+    {
+      "id": "PRN-8275a7",
+      "struttura": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 20.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "test@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-03-01",
+      "oraInizio": "18:00",
+      "oraFine": "19:00",
+      "numeroPosti": 1,
+      "stato": "Annullata",
+      "costoTotale": 20.0
+    }
+  ],
+  "elencoSportivi": [
+    {
+      "id": "U1",
+      "nome": "Mario",
+      "cognome": "Rossi",
+      "email": "mario@email.it",
+      "password": "pw"
+    },
+    {
+      "id": "U2",
+      "nome": "Pietro",
+      "cognome": "Alberio",
+      "email": "test@mail.com",
+      "password": "12345678"
+    }
+  ],
+  "amministratore": {
+    "id": "A1",
+    "nome": "Super",
+    "cognome": "Admin",
+    "email": "admin@yoursport.it",
+    "password": "adminpass"
+  },
+  "currentUser": {
+    "id": "U2",
+    "nome": "Pietro",
+    "cognome": "Alberio",
+    "email": "test@mail.com",
+    "password": "12345678"
+  }
+}

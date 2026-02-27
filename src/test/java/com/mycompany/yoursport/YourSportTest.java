@@ -25,8 +25,8 @@ public class YourSportTest {
     @BeforeEach
     public void setUp() {
         sistema = YourSport.getInstance();
-        sistema.resetSistemaPerTest(); // Metodo che svuota le prenotazioni
-        sistema.login("U1"); 
+        sistema.resetSistemaPerTest(); // Metodo che svuota le prenotazioni e abilita il flag Test
+        sistema.login("mario@email.it", "pw"); 
     }
     
     // Eseguito DOPO ogni test: Pulizia finale
@@ -35,7 +35,40 @@ public class YourSportTest {
         sistema.resetSistemaPerTest();
     }
 
-    //ITERAZIONE 1 (UC2)
+    // ==========================================================
+    // NUOVI TEST - ITERAZIONE 3 (UC1: Registrazione Sportivo)
+    // ==========================================================
+
+    @Test
+    public void testRegistrazioneSportivo_Successo() {
+        System.out.println("Test UC1: Registrazione Nuovo Utente (Successo)");
+
+        // 1. Azione: Registriamo un nuovo utente con un'email libera
+        String esito = sistema.registrazioneSportivo("Giulia", "Bianchi", "giulia@email.it", "pass123");
+
+        // 2. Verifica del messaggio di ritorno (dal Diagramma di Sequenza)
+        assertEquals("utente registrato", esito, "Il sistema deve confermare la registrazione");
+
+        // 3. Verifica strutturale: Proviamo a loggarci per vedere se esiste davvero in memoria!
+        boolean loginRiuscito = sistema.login("giulia@email.it", "pass123");
+        assertTrue(loginRiuscito, "Deve essere possibile effettuare il login con l'utente appena creato");
+    }
+
+    @Test
+    public void testRegistrazioneSportivo_EmailGiaInUso() {
+        System.out.println("Test UC1: Registrazione bloccata per Email Duplicata");
+
+        // 1. Azione: Tentiamo di usare "mario@email.it" (già caricata dal metodo inizializzaDatiTest)
+        String esito = sistema.registrazioneSportivo("Luigi", "Verdi", "mario@email.it", "altraPass");
+
+        // 2. Verifica del blocco ALT (dal Diagramma di Sequenza)
+        assertEquals("email già in uso", esito, "Il sistema deve impedire la registrazione se l'email esiste già");
+    }
+
+
+    // ==========================================================
+    // ITERAZIONE 1 (UC2: Prenotazione)
+    // ==========================================================
     
     // --- TEST 1: LA RICERCA (Filtro Catalogo) ---
     @Test
@@ -66,7 +99,6 @@ public class YourSportTest {
         sistema.confermaPrenotazione();
         
         // 2. Luigi prova a prenotare STESSA ORA -> FALLIMENTO
-        // Anche se chiede 1 posto e la capienza è 1, il campo è esclusivo ("ORARIO")
         Prenotazione p2 = sistema.selezionaRisorsa("S1", data, inizio, fine, 1);
         
         assertNull(p2, "La seconda prenotazione deve fallire perché il campo è occupato");
@@ -110,15 +142,14 @@ public class YourSportTest {
         sistema.confermaPrenotazione();
         
         // 2. Pomeriggio: Proviamo a prenotare dalle 15 alle 16 -> SUCCESSO
-        // Il sistema deve capire che alle 15 la piscina è vuota
         Prenotazione pPome = sistema.selezionaRisorsa(idPiscina, data, LocalTime.of(15, 0), LocalTime.of(16, 0), 5);
         
         assertNotNull(pPome, "Dovrebbe permettere prenotazione in orario diverso anche se mattina era piena");
     }
     
-// --- TEST 5: FILTRO CARATTERISTICHE ---
+    // --- TEST 5: FILTRO CARATTERISTICHE ---
     @Test
-   public void testRicercaPerCaratteristica() {
+    public void testRicercaPerCaratteristica() {
         System.out.println("Test: Ricerca con filtro Caratteristiche (es. Doccia)");
         
         List<String> caratteristicheRichieste = new ArrayList<>();
@@ -146,7 +177,7 @@ public class YourSportTest {
 
     // --- TEST 6: RICERCA A VUOTO ---
     @Test
-public void testRicercaNessunRisultato() {
+    public void testRicercaNessunRisultato() {
         System.out.println("---------------------------------------------------");
         System.out.println("TEST 6: Ricerca Sport Inesistente (es. 'Golf')");
         
@@ -176,9 +207,12 @@ public void testRicercaNessunRisultato() {
         System.out.println("---------------------------------------------------");
     }
 
- //ITERAZIONE 2 (UC3)
+
+    // ==========================================================
+    // ITERAZIONE 2 (UC3: Gestione Costi)
+    // ==========================================================
   
- @Test
+    @Test
     public void testMostraCatalogo() {
         // Esecuzione
         List<Struttura> catalogo = sistema.mostraCatalogo();
@@ -253,6 +287,5 @@ public void testRicercaNessunRisultato() {
         // Verifica secondaria: anche il prezzo non deve essere cambiato (Fail Fast)
         assertEquals(20.0, s1.getTariffa(), "Il costo base non deve aggiornarsi se il tipo tariffa era invalido");
     }
-
 
 }

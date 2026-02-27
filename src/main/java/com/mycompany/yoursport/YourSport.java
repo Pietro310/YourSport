@@ -8,6 +8,9 @@ package com.mycompany.yoursport;
  *
  * @author pietroalberio
  */
+
+
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -21,9 +24,7 @@ public class YourSport {
     private List<Prenotazione> archivioPrenotazioni;
     private List<Sportivo> elencoSportivi;
     
-    //Associazione 1 a 1 con l'Amministratore 
     private Admin amministratore;
-    
     private Prenotazione prenotazioneCorrente;
     private Sportivo currentUser;
 
@@ -38,25 +39,80 @@ public class YourSport {
         if (instance == null) instance = new YourSport();
         return instance;
     }
-
-    public void login(String idSportivo) {
-        for (Sportivo s : elencoSportivi) {
-            if (s.getId().equalsIgnoreCase(idSportivo)) {
-                this.currentUser = s;
-                return;
-            }
-        }
-        System.out.println("Utente non trovato.");
+    
+    public static void setInstance(YourSport loadedInstance) {
+        instance = loadedInstance;
     }
 
-    //
-    // METODI UC2 (Prenotazione Struttura)
-    // 
+    public void ricollegaDatiTrasienti() {
+        for (Sportivo s : elencoSportivi) {
+            s.getElencoPrenotazioni().clear(); 
+        }
+        for (Prenotazione p : archivioPrenotazioni) {
+            if (p.getSportivo() != null) {
+                Sportivo proprietario = getSportivo(p.getSportivo().getId());
+                if (proprietario != null) {
+                    proprietario.addPrenotazione(p);
+                }
+            }
+        }
+    }
 
+    // ==========================================
+    // SISTEMA DI AUTENTICAZIONE
+    // ==========================================
+    public boolean login(String email, String password) {
+        for (Sportivo s : elencoSportivi) {
+            if (s.getEmail().equalsIgnoreCase(email) && s.getPassword().equals(password)) {
+                this.currentUser = s;
+                return true; 
+            }
+        }
+        return false; 
+    }
+    
+    // --- NUOVO: Autenticazione specifica per l'Admin ---
+    public boolean loginAdmin(String email, String password) {
+        if (this.amministratore != null && 
+            this.amministratore.getEmail().equalsIgnoreCase(email) && 
+            this.amministratore.getPassword().equals(password)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public void logout() {
+        this.currentUser = null;
+    }
+
+    // ==========================================
+    // UC1: REGISTRAZIONE
+    // ==========================================
+    public String registrazioneSportivo(String nome, String cognome, String email, String password) {
+        boolean esiste = verificaEmail(email);
+        if (esiste) return "email già in uso";
+        
+        String nuovoId = "U" + (elencoSportivi.size() + 1);
+        Sportivo nuovoSportivo = new Sportivo(nuovoId, nome, cognome, email, password);
+        elencoSportivi.add(nuovoSportivo);
+        
+        GestoreJSON.salvaDati(this);
+        return "utente registrato";
+    }
+
+    private boolean verificaEmail(String email) {
+        for (Sportivo s : elencoSportivi) {
+            if (s.getEmail().equalsIgnoreCase(email)) return true;
+        }
+        return false;
+    }
+
+    // ==========================================
+    // UC2: PRENOTAZIONE
+    // ==========================================
     public List<Struttura> cercaStruttura(String tipologia, List<String> caratteristiche, LocalDate data) {
         System.out.println("--- Ricerca Strutture compatibili per il " + data + " ---");
         List<Struttura> risultato = new ArrayList<>();
-
         for (Struttura s : catalogoStrutture) {
             if (s.corrisponde(tipologia, caratteristiche)) {
                 risultato.add(s);
@@ -66,6 +122,24 @@ public class YourSport {
     }
 
     public Prenotazione selezionaRisorsa(String idStruttura, LocalDate data, LocalTime oraInizio, LocalTime oraFine, int numeroPostiRichiesti) {
+        LocalDate oggi = LocalDate.now();
+        LocalTime oraAttuale = LocalTime.now();
+
+        if (data.isBefore(oggi)) {
+            System.out.println("ERRORE DI SISTEMA: Non puoi prenotare per una data passata!");
+            return null;
+        }
+        
+        if (data.isEqual(oggi) && oraInizio.isBefore(oraAttuale)) {
+            System.out.println("ERRORE DI SISTEMA: L'orario di inizio specificato è già passato!");
+            return null;
+        }
+        
+        if (!oraFine.isAfter(oraInizio)) {
+            System.out.println("ERRORE DI SISTEMA: L'orario di fine deve essere successivo all'orario di inizio!");
+            return null;
+        }
+
         Struttura s = getStruttura(idStruttura);
         if (s == null) throw new IllegalArgumentException("Struttura non trovata");
 
@@ -82,23 +156,18 @@ public class YourSport {
 
     private boolean isRisorsaDisponibile(Struttura s, LocalDate data, LocalTime inizio, LocalTime fine, int postiRichiesti) {
         int occupatiInQuestoOrario = 0;
-
         for (Prenotazione p : archivioPrenotazioni) {
             if (p.getStruttura().getId().equals(s.getId()) && 
                 p.getData().equals(data) && 
                 p.getStato().equals("Confermata")) {
                 
                 boolean sovrapposizione = inizio.isBefore(p.getOraFine()) && fine.isAfter(p.getOraInizio());
-                
                 if (sovrapposizione) {
-                    if ("ORARIO".equalsIgnoreCase(s.getTipoTariffa())) {
-                        return false; 
-                    }
+                    if ("ORARIO".equalsIgnoreCase(s.getTipoTariffa())) return false; 
                     occupatiInQuestoOrario += p.getNumeroPosti();
                 }
             }
         }
-
         int postiLiberi = s.getCapienza() - occupatiInQuestoOrario;
         return postiLiberi >= postiRichiesti;
     }
@@ -106,85 +175,94 @@ public class YourSport {
     public void confermaPrenotazione() {
         if (this.prenotazioneCorrente != null) {
             this.prenotazioneCorrente.setStato("Confermata");
-            // Ora che la prenotazione è confermata, la aggiungiamo all'archivio generale...
             this.archivioPrenotazioni.add(this.prenotazioneCorrente);
-            // ... e la aggiungiamo anche alla lista personale dello Sportivo (coerenza col DCD!)
             if (this.currentUser != null) {
                 this.currentUser.addPrenotazione(this.prenotazioneCorrente);
             }
             System.out.println(">>> PRENOTAZIONE REGISTRATA CON SUCCESSO <<<");
             this.prenotazioneCorrente = null;
+            
+            GestoreJSON.salvaDati(this);
         }
     }
     
-    // 
-    // NUOVI METODI UC3 (Gestione Costi)
-    // 
-
-    public List<Struttura> mostraCatalogo() {
-        return this.catalogoStrutture;
-    }
+    // ==========================================
+    // UC3: GESTIONE COSTI
+    // ==========================================
+    public List<Struttura> mostraCatalogo() { return this.catalogoStrutture; }
 
     public String mostraDettagliStruttura(String idStruttura) {
         Struttura s = getStruttura(idStruttura);
-        if (s != null) {
-            // Pattern Information Expert
-            return s.getDettagli();
-        }
+        if (s != null) return s.getDettagli();
         return "Errore: Struttura inesistente nel catalogo.";
     }
 
-public void aggiornaTariffa(String idStruttura, String tipoTariffa, double costoBase) {
+    public void aggiornaTariffa(String idStruttura, String tipoTariffa, double costoBase) {
         Struttura s = getStruttura(idStruttura);
-        
         if (s != null) {
-            // --- NUOVO CONTROLLO: Validazione Tipo Tariffa ---
-            // Se la parola NON è "ORARIO" e NON è "PERSONA", blocca tutto.
             if (!tipoTariffa.equalsIgnoreCase("ORARIO") && !tipoTariffa.equalsIgnoreCase("PERSONA")) {
-                System.out.println("ERRORE DI SISTEMA: Tipo tariffa non valido! Inserire solo 'ORARIO' o 'PERSONA'.");
-                return; // Esce immediatamente dal metodo senza modificare nulla
+                System.out.println("ERRORE DI SISTEMA: Tipo tariffa non valido!");
+                return;
             }
-
-            // --- Blocco ALT (Estensione 3a del caso d'uso: controllo costoBase >= 0) ---
             if (costoBase >= 0) {
-                // Normalizziamo la stringa mettendola in maiuscolo (es. se digita "orario" diventa "ORARIO")
                 s.setTipoTariffa(tipoTariffa.toUpperCase());
                 s.setCostoBase(costoBase);
-                System.out.println(">>> Sistema: Aggiornamento tariffa confermato per la struttura " + s.getNome() + " <<<");
+                System.out.println(">>> Sistema: Aggiornamento tariffa confermato <<<");
+                GestoreJSON.salvaDati(this);
             } else {
-                System.out.println("ERRORE DI SISTEMA: Il costo base inserito non è valido (deve essere >= 0).");
+                System.out.println("ERRORE DI SISTEMA: Costo base non valido.");
             }
         } else {
-            System.out.println("ERRORE DI SISTEMA: Impossibile aggiornare, la struttura non è stata trovata.");
+            System.out.println("ERRORE DI SISTEMA: Struttura non trovata.");
         }
     }
 
-    // 
+    // ==========================================
     // UTILITIES & INIZIALIZZAZIONE
-    // 
-
-    public void resetSistemaPerTest() {
-        this.archivioPrenotazioni.clear();
-        this.prenotazioneCorrente = null;
-    }
-    
+    // ==========================================
     public Struttura getStruttura(String id) {
         for (Struttura s : catalogoStrutture) {
             if (s.getId().equalsIgnoreCase(id)) return s;
         }
         return null;
     }
+    
+    public Sportivo getSportivo(String idSportivo) {
+        for (Sportivo s : elencoSportivi) {
+            if (s.getId().equalsIgnoreCase(idSportivo)) return s;
+        }
+        return null;
+    }
+    
+    public Prenotazione getPrenotazione(String idPrenotazione) {
+        for (Prenotazione p : archivioPrenotazioni) {
+            if (p.getId().equalsIgnoreCase(idPrenotazione)) return p;
+        }
+        return null;
+    }
+
+    public Sportivo getCurrentUser() {
+        return currentUser;
+    }
+    
+    // Serve per il benvenuto nell'interfaccia
+    public Admin getAmministratore() {
+        return amministratore;
+    }
 
     private void inizializzaDatiTest() {
-        // Inizializza l'unico amministratore del sistema
         this.amministratore = new Admin("A1", "Super", "Admin", "admin@yoursport.it", "adminpass");
-        
-        // Inizializza uno sportivo
         elencoSportivi.add(new Sportivo("U1", "Mario", "Rossi", "mario@email.it", "pw"));
-        
-        // S1: Tennis (Esclusivo)
         catalogoStrutture.add(new Struttura("S1", "Campo A", "Tennis", Arrays.asList("Terra Rossa"), 1, 20.0, true, "ORARIO"));
-        // S2: Piscina (Condiviso)
         catalogoStrutture.add(new Struttura("S2", "Piscina Comunale", "Piscina", Arrays.asList("Doccia"), 20, 8.0, true, "PERSONA"));
+    }
+
+    public void resetSistemaPerTest() {
+        GestoreJSON.DISABILITA_SALVATAGGIO_PER_TEST = true; 
+        this.archivioPrenotazioni.clear();
+        this.prenotazioneCorrente = null;
+        this.catalogoStrutture.clear();
+        this.elencoSportivi.clear();
+        inizializzaDatiTest();
     }
 }
