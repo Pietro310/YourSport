@@ -78,7 +78,8 @@ public class Struttura {
     public String getTipoTariffa() { return tipoTariffa; }
     public void setTipoTariffa(String tipoTariffa) { this.tipoTariffa = tipoTariffa; }
     public boolean isDisponibile() { return disponibile; }
-    public void setDisponibile(boolean disponibile) { this.disponibile = disponibile; }
+    public void setDisponibile(boolean disponibile) { this.disponibile = disponibile; } 
+    public List<String> getCaratteristiche() { return caratteristiche; }
 
     // METODO LEGACY: Mantiene in vita i vecchi test senza che tu debba modificarli!
     public double getTariffa() {

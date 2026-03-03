@@ -165,6 +165,34 @@
       "numeroPosti": 1,
       "stato": "Annullata",
       "costoTotale": 20.0
+    },
+    {
+      "id": "PRN-a0d051",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA"
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "test@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-06-21",
+      "oraInizio": "18:00",
+      "oraFine": "19:00",
+      "numeroPosti": 1,
+      "stato": "Confermata",
+      "costoTotale": 13.0
     }
   ],
   "elencoSportivi": [
