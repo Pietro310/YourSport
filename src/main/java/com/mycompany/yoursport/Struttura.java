@@ -80,9 +80,4 @@ public class Struttura {
     public boolean isDisponibile() { return disponibile; }
     public void setDisponibile(boolean disponibile) { this.disponibile = disponibile; } 
     public List<String> getCaratteristiche() { return caratteristiche; }
-
-    // METODO LEGACY: Mantiene in vita i vecchi test senza che tu debba modificarli!
-    public double getTariffa() {
-        return this.costoBase;
-    }
 }

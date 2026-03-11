@@ -193,6 +193,62 @@
       "numeroPosti": 1,
       "stato": "Confermata",
       "costoTotale": 13.0
+    },
+    {
+      "id": "PRN-3a89ef",
+      "struttura": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 30.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      },
+      "sportivo": {
+        "id": "U3",
+        "nome": "Davide",
+        "cognome": "Consoli",
+        "email": "test@.com",
+        "password": "12345678"
+      },
+      "data": "2027-12-12",
+      "oraInizio": "12:00",
+      "oraFine": "13:00",
+      "numeroPosti": 1,
+      "stato": "Annullata",
+      "costoTotale": 30.0
+    },
+    {
+      "id": "PRN-29ab80",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA"
+      },
+      "sportivo": {
+        "id": "U3",
+        "nome": "Davide",
+        "cognome": "Consoli",
+        "email": "test@.com",
+        "password": "12345678"
+      },
+      "data": "2026-05-23",
+      "oraInizio": "12:00",
+      "oraFine": "13:00",
+      "numeroPosti": 4,
+      "stato": "Confermata",
+      "costoTotale": 32.0
     }
   ],
   "elencoSportivi": [
@@ -209,6 +265,13 @@
       "cognome": "Alberio",
       "email": "test@mail.com",
       "password": "12345678"
+    },
+    {
+      "id": "U3",
+      "nome": "Davide",
+      "cognome": "Consoli",
+      "email": "test@.com",
+      "password": "12345678"
     }
   ],
   "amministratore": {
@@ -217,12 +280,5 @@
     "cognome": "Admin",
     "email": "admin@yoursport.it",
     "password": "adminpass"
-  },
-  "currentUser": {
-    "id": "U2",
-    "nome": "Pietro",
-    "cognome": "Alberio",
-    "email": "test@mail.com",
-    "password": "12345678"
   }
 }

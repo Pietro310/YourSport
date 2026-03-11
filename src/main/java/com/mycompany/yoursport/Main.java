@@ -178,9 +178,9 @@ public class Main {
             if (risultati.isEmpty()) {
                 System.out.println("Nessuna struttura trovata con questi filtri.");
             } else {
-                System.out.println("\n--- SPECIFICA ORARIO ---");
                 System.out.print("4. ID Struttura da prenotare: ");
                 String id = scanner.nextLine();
+                System.out.println("\n--- SPECIFICA ORARIO ---");
                 System.out.print("5. Ora Inizio (HH:mm): ");
                 LocalTime inizio = LocalTime.parse(scanner.nextLine());
                 System.out.print("6. Ora Fine (HH:mm): ");

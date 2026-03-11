@@ -246,14 +246,14 @@ public class YourSportTest {
     public void testAggiornaTariffa_Successo() {
         // Setup: recuperiamo S1 e verifichiamo lo stato iniziale
         Struttura s1 = sistema.getStruttura("S1");
-        assertEquals(20.0, s1.getTariffa());
+        assertEquals(20.0, s1.getCostoBase());
         assertEquals("ORARIO", s1.getTipoTariffa());
 
         // Esecuzione: l'Admin imposta a PERSONA e cambia il prezzo a 25.0
         sistema.aggiornaTariffa("S1", "PERSONA", 25.0);
 
         // Verifica: I valori devono essersi aggiornati (Post-condizioni del Contratto Operazione soddisfatte)
-        assertEquals(25.0, s1.getTariffa(), "Il costo base dovrebbe essersi aggiornato a 25.0");
+        assertEquals(25.0, s1.getCostoBase(), "Il costo base dovrebbe essersi aggiornato a 25.0");
         assertEquals("PERSONA", s1.getTipoTariffa(), "Il tipo tariffa dovrebbe essersi aggiornato a PERSONA");
         
         // Teardown manuale per non sporcare i test successivi (visto che è un Singleton)
@@ -264,13 +264,13 @@ public class YourSportTest {
     public void testAggiornaTariffa_ErroreCostoNegativo_Estensione3a() {
         // Setup
         Struttura s1 = sistema.getStruttura("S1");
-        double costoIniziale = s1.getTariffa();
+        double costoIniziale = s1.getCostoBase();
 
         // Esecuzione: l'Admin tenta di inserire un costo negativo
         sistema.aggiornaTariffa("S1", "ORARIO", -5.0);
 
         // Verifica: Il costo NON deve essere cambiato (l'aggiornamento è stato bloccato)
-        assertEquals(costoIniziale, s1.getTariffa(), "Il costo base NON deve cambiare se si inserisce un valore negativo");
+        assertEquals(costoIniziale, s1.getCostoBase(), "Il costo base NON deve cambiare se si inserisce un valore negativo");
     }
 
     @Test
@@ -285,7 +285,7 @@ public class YourSportTest {
         // Verifica: Il tipo di tariffa NON deve essere cambiato
         assertEquals(tipoIniziale, s1.getTipoTariffa(), "Il tipo tariffa NON deve cambiare se si inserisce un valore non valido");
         // Verifica secondaria: anche il prezzo non deve essere cambiato (Fail Fast)
-        assertEquals(20.0, s1.getTariffa(), "Il costo base non deve aggiornarsi se il tipo tariffa era invalido");
+        assertEquals(20.0, s1.getCostoBase(), "Il costo base non deve aggiornarsi se il tipo tariffa era invalido");
     }
 
 }
