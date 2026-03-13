@@ -36,7 +36,7 @@ public class YourSportTest {
     }
 
     // ==========================================================
-    // NUOVI TEST - ITERAZIONE 3 (UC1: Registrazione Sportivo)
+    // ITERAZIONE 3 (UC1: Registrazione Sportivo)
     // ==========================================================
 
     @Test
@@ -286,6 +286,81 @@ public class YourSportTest {
         assertEquals(tipoIniziale, s1.getTipoTariffa(), "Il tipo tariffa NON deve cambiare se si inserisce un valore non valido");
         // Verifica secondaria: anche il prezzo non deve essere cambiato (Fail Fast)
         assertEquals(20.0, s1.getCostoBase(), "Il costo base non deve aggiornarsi se il tipo tariffa era invalido");
+    }
+    
+    // ==========================================================
+    // ITERAZIONE 4 (UC5: Segnalazione Guasto da parte dello Sportivo)
+    // ==========================================================
+
+    @Test
+    public void testInviaSegnalazione_Successo() {
+        System.out.println("Test UC5: Invia Segnalazione (Cammino Felice)");
+
+        // --- ARRANGE ---
+        // Il setup() ha già loggato "mario@email.it"
+        String idStrutturaDaSegnalare = "S1"; // Usiamo il campo da Tennis esistente
+        String descrizioneGuasto = "Rete da tennis strappata";
+
+        // --- ACT ---
+        Segnalazione nuovaSeg = sistema.inviaSegnalazione(idStrutturaDaSegnalare, descrizioneGuasto);
+
+        // --- ASSERT ---
+        // 1. Verifica creazione base
+        assertNotNull(nuovaSeg, "Il sistema deve creare e restituire l'oggetto Segnalazione");
+        assertNotNull(nuovaSeg.getId(), "Deve essere generato un ID univoco");
+        
+        // 2. Verifica inizializzazione stato e data
+        assertEquals("Aperta", nuovaSeg.getStato(), "Lo stato iniziale deve essere 'Aperta'");
+        assertNotNull(nuovaSeg.getDataInvio(), "La data di invio deve essere registrata");
+        assertEquals(descrizioneGuasto, nuovaSeg.getDescrizione(), "La descrizione deve coincidere");
+
+        // 3. Verifica associazioni (Le frecce del DCD)
+        assertNotNull(nuovaSeg.getAutore(), "L'autore deve essere stato collegato");
+        assertEquals("mario@email.it", nuovaSeg.getAutore().getEmail(), "L'autore deve essere l'utente loggato");
+
+        assertNotNull(nuovaSeg.getStrutturaCoinvolta(), "La struttura deve essere stata collegata");
+        assertEquals("S1", nuovaSeg.getStrutturaCoinvolta().getId(), "La struttura coinvolta deve essere S1");
+    }
+
+    @Test
+    public void testInviaSegnalazione_ErroreUtenteNonLoggato() {
+        System.out.println("Test UC5: Invia Segnalazione bloccata (Utente non loggato)");
+
+        // --- ARRANGE ---
+        sistema.logout(); // Forza l'uscita dell'utente loggato nel setUp()
+        String idStrutturaDaSegnalare = "S1";
+        String descrizioneGuasto = "Doccia rotta";
+
+        // --- ACT & ASSERT ---
+        // Il sistema DEVE lanciare un'eccezione se un utente non loggato prova a inviare un guasto
+        Exception eccezione = assertThrows(IllegalArgumentException.class, () -> {
+            sistema.inviaSegnalazione(idStrutturaDaSegnalare, descrizioneGuasto);
+        });
+
+        // Verifichiamo che il messaggio di errore contenga parole chiave pertinenti
+        assertTrue(eccezione.getMessage().toLowerCase().contains("loggato") || 
+                   eccezione.getMessage().toLowerCase().contains("errore"), 
+                   "Il messaggio di errore deve indicare l'assenza di un utente loggato");
+    }
+
+    @Test
+    public void testInviaSegnalazione_ErroreStrutturaInesistente() {
+        System.out.println("Test UC5: Invia Segnalazione bloccata (Struttura inesistente)");
+
+        // --- ARRANGE ---
+        // Utente già loggato tramite setUp()
+        String idStrutturaFalsa = "S_INVENTATO_99";
+        String descrizioneGuasto = "Luci fulminate";
+
+        // --- ACT & ASSERT ---
+        Exception eccezione = assertThrows(IllegalArgumentException.class, () -> {
+            sistema.inviaSegnalazione(idStrutturaFalsa, descrizioneGuasto);
+        });
+
+        // Verifichiamo che il messaggio di errore sia corretto
+        assertTrue(eccezione.getMessage().toLowerCase().contains("struttura") || 
+                   eccezione.getMessage().toLowerCase().contains("trovata"), 
+                   "Il messaggio di errore deve indicare che l'ID della struttura non è valido");
     }
 
 }

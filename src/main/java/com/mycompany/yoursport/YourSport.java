@@ -19,11 +19,11 @@ import java.util.List;
 
 public class YourSport {
 
-    private static YourSport instance;
+    private static YourSport instance; //singleton
     private List<Struttura> catalogoStrutture;
     private List<Prenotazione> archivioPrenotazioni;
     private List<Sportivo> elencoSportivi;
-    
+    private List<Segnalazione> archivioSegnalazioni;
     private Admin amministratore;
     private Prenotazione prenotazioneCorrente;
     private Sportivo currentUser;
@@ -32,6 +32,7 @@ public class YourSport {
         this.catalogoStrutture = new ArrayList<>();
         this.archivioPrenotazioni = new ArrayList<>();
         this.elencoSportivi = new ArrayList<>();
+        this.archivioSegnalazioni = new ArrayList<>();
         inizializzaDatiTest();
     }
 
@@ -56,7 +57,23 @@ public class YourSport {
                 }
             }
         }
+        for (Segnalazione seg : this.archivioSegnalazioni) {
+    
+    // Ricollega l'autore (Sportivo)
+    if (seg.getAutore() != null) {
+        Sportivo veroAutore = this.getSportivo(seg.getAutore().getId());
+        if (veroAutore != null) {
+            seg.setAutore(veroAutore);
+        }
     }
+    if (seg.getStrutturaCoinvolta() != null) {
+        Struttura veraStruttura = this.getStruttura(seg.getStrutturaCoinvolta().getId());
+        if (veraStruttura != null) {
+            seg.setStrutturaCoinvolta(veraStruttura);
+        }
+    }
+   }
+  }
 
     // ==========================================
     // SISTEMA DI AUTENTICAZIONE
@@ -217,8 +234,63 @@ public class YourSport {
         }
     }
 
+      // --------------------------------------------------------
+      //UC5
+      // --------------------------------------------------------
+    public Segnalazione inviaSegnalazione(String idStruttura, String descrizione) {
+        
+        if (this.archivioSegnalazioni == null) {
+        this.archivioSegnalazioni = new ArrayList<>();
+        }
+        // Messaggio 1.1: Trova la struttura (metodo privato di supporto)
+        Struttura str = this.getStruttura(idStruttura);
+        
+        // Messaggio 1.2: Recupera chi è loggato in questo momento (metodo privato di supporto)
+        Sportivo currentUser = this.getCurrentUser();
+        
+        // (Opzionale: piccolo controllo di sicurezza per evitare che Java vada in crash)
+        if (str == null || currentUser == null) {
+            throw new IllegalArgumentException("Errore: struttura non trovata o utente non loggato");
+        }
+
+        // Messaggio 1.3: Creazione (<<create>>) dell'oggetto Segnalazione
+        Segnalazione seg = new Segnalazione(descrizione, currentUser, str);
+
+        // Messaggio 1.4: Salvataggio in memoria (nella lista del DCD)
+        this.archivioSegnalazioni.add(seg);
+
+        // Messaggio 1.5: Ritorna l'oggetto appena creato
+        return seg;
+    }
+    
+    
+      // --------------------------------------------------------
+      //UC6
+      // --------------------------------------------------------
+    
+    // Restituisce l'intera lista al Gestore
+    public List<Segnalazione> getArchivioSegnalazioni() {
+        if (this.archivioSegnalazioni == null) {
+            this.archivioSegnalazioni = new java.util.ArrayList<>();
+        }
+        return this.archivioSegnalazioni;
+    }
+
+    // Messaggio 1.1 dell'SD: Cerca una specifica segnalazione per ID
+    public Segnalazione getSegnalazione(String idSegnalazione) {
+        if (this.archivioSegnalazioni != null) {
+            for (Segnalazione s : archivioSegnalazioni) {
+                if (s.getId().equalsIgnoreCase(idSegnalazione)) {
+                    return s;
+                }
+            }
+        }
+        return null; // Ritorna null se non la trova (gestito dal riquadro opt dell'SD!)
+    }
+
+    
     // ==========================================
-    // UTILITIES & INIZIALIZZAZIONE
+    // getter e setter
     // ==========================================
     public Struttura getStruttura(String id) {
         for (Struttura s : catalogoStrutture) {

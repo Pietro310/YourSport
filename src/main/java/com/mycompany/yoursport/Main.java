@@ -41,7 +41,7 @@ public class Main {
             System.out.println("        BENVENUTO IN YOURSPORT            ");
             System.out.println("==========================================");
             System.out.println("1. Registrati al sistema (Test UC1)");
-            System.out.println("2. Accedi come Sportivo  (Test UC2 e UC4)");
+            System.out.println("2. Accedi come Sportivo  (Test UC2, UC4 e UC5)");
             System.out.println("3. Accedi come Admin     (Test UC3 - Gestione Costi)");
             System.out.println("4. Esci dal sistema");
             System.out.print("Scegli un'opzione: ");
@@ -112,13 +112,15 @@ public class Main {
             System.out.println("==========================================");
             System.out.println("1. Nuova Prenotazione (UC2)");
             System.out.println("2. Le Mie Prenotazioni / Annulla (UC4)");
-            System.out.println("3. Esci / Logout");
+            System.out.println("3. Segnala un guasto/problema (UC5)"); // NUOVA OPZIONE AGGIUNTA
+            System.out.println("4. Esci / Logout"); // SCALATO A 4
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
             
             if (opz.equals("1")) {
                 eseguiFlussoPrenotazioneUC2(sistema, scanner);
+                
             } else if (opz.equals("2")) {
                 GestorePrenotazioni gestoreUC4 = new GestorePrenotazioni();
                 List<Prenotazione> miePrenotazioni = gestoreUC4.mostraMiePrenotazioni(utenteLoggato.getId());
@@ -141,7 +143,31 @@ public class Main {
                         System.out.println(">>> ESITO: " + esito.toUpperCase() + " <<<");
                     }
                 }
+                
+            // INIZIO IMPLEMENTAZIONE UC5: Segnala un guasto
             } else if (opz.equals("3")) {
+                System.out.println("\n--- INVIA SEGNALAZIONE GUASTO ---");
+                
+                System.out.print("Inserisci l'ID della struttura guasta (es. CAMPO1): ");
+                String idStrutturaGuasta = scanner.nextLine().trim();
+                
+                System.out.print("Descrivi il problema (es. Rete bucata, doccia fredda): ");
+                String descrizioneGuasto = scanner.nextLine().trim();
+                
+                try {
+                    // Chiamata all'operazione di sistema (Messaggio 1 del tuo SD)
+                    Segnalazione nuovaSeg = sistema.inviaSegnalazione(idStrutturaGuasta, descrizioneGuasto);
+                    
+                    System.out.println("\n Segnalazione inviata con successo!");
+                    System.out.println("ID Ticket generato: [" + nuovaSeg.getId() + "]");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("\n Errore durante l'invio: " + e.getMessage());
+                } catch (Exception e) {
+                    System.out.println("\n Si è verificato un errore imprevisto: " + e.getMessage());
+                }
+            // FINE IMPLEMENTAZIONE UC5
+                
+            } else if (opz.equals("4")) {
                 continua = false;
                 sistema.logout();
                 System.out.println("Logout effettuato.");
@@ -210,7 +236,7 @@ public class Main {
         }
     }
 
-    private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
+private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
         // --- AUTENTICAZIONE ADMIN ---
         System.out.println("\n--- AUTENTICAZIONE ADMIN ---");
         System.out.print("Email Admin: ");
@@ -226,44 +252,104 @@ public class Main {
         Admin amministratore = sistema.getAmministratore();
         System.out.println("\nLogin effettuato. Benvenuto " + amministratore.getNome() + " (ADMIN)!");
 
-        System.out.println("\n==========================================");
-        System.out.println("     PANNELLO ADMIN - GESTIONE TARIFFE    ");
-        System.out.println("==========================================");
-        
         boolean continuaAdmin = true;
         
         while (continuaAdmin) {
-            System.out.println("\n--- CATALOGO STRUTTURE ---");
-            List<Struttura> catalogo = sistema.mostraCatalogo();
-            for (Struttura s : catalogo) {
-                System.out.println(" - ID: [" + s.getId() + "] " + s.getNome() + " (" + s.getTipologia() + ")");
-            }
+            System.out.println("\n==========================================");
+            System.out.println("               PANNELLO ADMIN             ");
+            System.out.println("==========================================");
+            System.out.println("1. Gestione Tariffe Strutture (UC3)");
+            System.out.println("2. Gestione Segnalazioni Guasti (UC6)"); // <-- NUOVA OPZIONE
+            System.out.println("3. Esci / Logout");
+            System.out.print("Scegli un'opzione: ");
+            
+            String opz = scanner.nextLine().trim();
+            
+            if (opz.equals("1")) {
+                // ==========================================
+                // VECCHIO CODICE UC3: GESTIONE TARIFFE
+                // ==========================================
+                boolean continuaTariffe = true;
+                while (continuaTariffe) {
+                    System.out.println("\n--- CATALOGO STRUTTURE ---");
+                    List<Struttura> catalogo = sistema.mostraCatalogo();
+                    for (Struttura s : catalogo) {
+                        System.out.println(" - ID: [" + s.getId() + "] " + s.getNome() + " (" + s.getTipologia() + ")");
+                    }
 
-            System.out.print("\nInserisci l'ID della struttura da modificare (o 'esci' per tornare al menu): ");
-            String idTarget = scanner.nextLine().trim();
-            if (idTarget.equalsIgnoreCase("esci")) break;
+                    System.out.print("\nInserisci l'ID della struttura da modificare (o 'esci' per tornare indietro): ");
+                    String idTarget = scanner.nextLine().trim();
+                    if (idTarget.equalsIgnoreCase("esci")) break;
 
-            String dettagli = sistema.mostraDettagliStruttura(idTarget);
-            System.out.println("\n--- Dettagli Attuali ---");
-            System.out.println(dettagli);
+                    String dettagli = sistema.mostraDettagliStruttura(idTarget);
+                    System.out.println("\n--- Dettagli Attuali ---");
+                    System.out.println(dettagli);
 
-            if (!dettagli.contains("Errore")) {
-                System.out.print("\nInserisci il nuovo Tipo di Tariffa (es. ORARIO o PERSONA): ");
-                String nuovoTipo = scanner.nextLine().trim();
-                System.out.print("Inserisci il nuovo Costo Base: ");
-                double nuovoCosto = -1;
-                try {
-                    nuovoCosto = Double.parseDouble(scanner.nextLine().replace(",", "."));
-                } catch (NumberFormatException e) {
-                    System.out.println("Formato numero non valido.");
+                    if (!dettagli.contains("Errore")) {
+                        System.out.print("\nInserisci il nuovo Tipo di Tariffa (es. ORARIO o PERSONA): ");
+                        String nuovoTipo = scanner.nextLine().trim();
+                        System.out.print("Inserisci il nuovo Costo Base: ");
+                        double nuovoCosto = -1;
+                        try {
+                            nuovoCosto = Double.parseDouble(scanner.nextLine().replace(",", "."));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Formato numero non valido.");
+                        }
+
+                        System.out.println("\nElaborazione richiesta...");
+                        sistema.aggiornaTariffa(idTarget, nuovoTipo, nuovoCosto);
+                    }
+
+                    System.out.print("\nVuoi modificare un'altra tariffa? (si/no): ");
+                    if (!scanner.nextLine().equalsIgnoreCase("si")) continuaTariffe = false;
                 }
 
-                System.out.println("\nElaborazione richiesta...");
-                sistema.aggiornaTariffa(idTarget, nuovoTipo, nuovoCosto);
+            } else if (opz.equals("2")) {
+                // ==========================================
+                // NUOVO CODICE UC6: GESTIONE SEGNALAZIONI
+                // ==========================================
+                GestoreSegnalazioni gestoreUC6 = new GestoreSegnalazioni();
+                
+                System.out.println("\n--- ELENCO SEGNALAZIONI GUASTI ---");
+                // Messaggio 1 dell'SSD: Mostra segnalazioni
+                List<Segnalazione> listaGuasti = gestoreUC6.mostraSegnalazioni();
+                
+                if (listaGuasti == null || listaGuasti.isEmpty()) {
+                    System.out.println("Ottime notizie: Non ci sono guasti segnalati nel sistema!");
+                } else {
+                    for (Segnalazione seg : listaGuasti) {
+                        String nomeStruttura = (seg.getStrutturaCoinvolta() != null) ? seg.getStrutturaCoinvolta().getNome() : "Sconosciuta";
+                        System.out.println("ID: [" + seg.getId() + "] | Struttura: " + nomeStruttura + 
+                                           " | Stato: [" + seg.getStato().toUpperCase() + "] | Problema: " + seg.getDescrizione());
+                    }
+                    
+                    // Inizio del Loop dell'SSD
+                    System.out.print("\nInserisci l'ID della segnalazione da aggiornare (o premi Invio per tornare indietro): ");
+                    String idDaAggiornare = scanner.nextLine().trim();
+                    
+                    if (!idDaAggiornare.isEmpty()) {
+                        System.out.print("Inserisci il NUOVO STATO (es. In lavorazione, Risolta, Rifiutata): ");
+                        String nuovoStato = scanner.nextLine().trim();
+                        
+                        System.out.println("Elaborazione aggiornamento in corso...");
+                        // Messaggio 2 dell'SSD: Aggiorna stato
+                        boolean successo = gestoreUC6.aggiornaStatoSegnalazione(idDaAggiornare, nuovoStato);
+                        
+                        if (successo) {
+                            System.out.println("✅ Stato aggiornato con successo a: " + nuovoStato);
+                        } else {
+                            System.out.println("❌ Errore: Segnalazione non trovata. Controlla l'ID.");
+                        }
+                    }
+                }
+                
+            } else if (opz.equals("3")) {
+                continuaAdmin = false;
+                sistema.logout(); // Corretto per uscire dalla sessione Admin
+                System.out.println("Logout Admin effettuato. Ritorno al menu principale.");
+            } else {
+                System.out.println("Opzione non valida.");
             }
-
-            System.out.print("\nVuoi modificare un'altra tariffa? (si/no): ");
-            if (!scanner.nextLine().equalsIgnoreCase("si")) continuaAdmin = false;
         }
     }
 }

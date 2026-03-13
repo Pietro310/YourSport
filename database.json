@@ -274,6 +274,58 @@
       "password": "12345678"
     }
   ],
+  "archivioSegnalazioni": [
+    {
+      "id": "de6834b1-5dd2-429e-91f8-5f39fc3c85a7",
+      "descrizione": "rete bucata",
+      "dataInvio": "Mar 11, 2026, 9:26:11 AM",
+      "stato": "In lavorazione",
+      "autore": {
+        "id": "U3",
+        "nome": "Davide",
+        "cognome": "Consoli",
+        "email": "test@.com",
+        "password": "12345678"
+      },
+      "strutturaCoinvolta": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 30.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      }
+    },
+    {
+      "id": "6caeac74-941c-44ed-869a-761f0cfc3287",
+      "descrizione": "rete bucata",
+      "dataInvio": "Mar 11, 2026, 9:29:16 AM",
+      "stato": "Aperta",
+      "autore": {
+        "id": "U3",
+        "nome": "Davide",
+        "cognome": "Consoli",
+        "email": "test@.com",
+        "password": "12345678"
+      },
+      "strutturaCoinvolta": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 30.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO"
+      }
+    }
+  ],
   "amministratore": {
     "id": "A1",
     "nome": "Super",
