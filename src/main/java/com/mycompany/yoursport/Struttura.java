@@ -23,6 +23,7 @@ public class Struttura {
     private double costoBase;
     private boolean disponibile;
     private String tipoTariffa; // Può essere "ORARIO" o "PERSONA"
+    private boolean isOperativo = true; // Di base, quando crei un campo, è funzionante
 
     public Struttura(String id, String nome, String tipologia, List<String> caratteristiche, int capienza, double costoBase, boolean disponibile, String tipoTariffa) {
         this.id = id;
@@ -80,4 +81,14 @@ public class Struttura {
     public boolean isDisponibile() { return disponibile; }
     public void setDisponibile(boolean disponibile) { this.disponibile = disponibile; } 
     public List<String> getCaratteristiche() { return caratteristiche; }
+    
+    public boolean isOperativo() {
+        return isOperativo;
+    }
+
+    public void setOperativo(boolean isOperativo) {
+        this.isOperativo = isOperativo;
+    }
+    
 }
+

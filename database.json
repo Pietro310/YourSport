@@ -8,9 +8,10 @@
         "Terra Rossa"
       ],
       "capienza": 1,
-      "costoBase": 30.0,
+      "costoBase": 20.0,
       "disponibile": true,
-      "tipoTariffa": "ORARIO"
+      "tipoTariffa": "ORARIO",
+      "isOperativo": false
     },
     {
       "id": "S2",
@@ -22,12 +23,13 @@
       "capienza": 20,
       "costoBase": 8.0,
       "disponibile": true,
-      "tipoTariffa": "PERSONA"
+      "tipoTariffa": "PERSONA",
+      "isOperativo": true
     }
   ],
   "archivioPrenotazioni": [
     {
-      "id": "PRN-f74b0b",
+      "id": "PRN-3f7a6d",
       "struttura": {
         "id": "S2",
         "nome": "Piscina Comunale",
@@ -38,164 +40,25 @@
         "capienza": 20,
         "costoBase": 8.0,
         "disponibile": true,
-        "tipoTariffa": "PERSONA"
-      },
-      "sportivo": {
-        "id": "U1",
-        "nome": "Mario",
-        "cognome": "Rossi",
-        "email": "mario@email.it",
-        "password": "pw"
-      },
-      "data": "2026-03-01",
-      "oraInizio": "15:00",
-      "oraFine": "16:00",
-      "numeroPosti": 15,
-      "stato": "Confermata",
-      "costoTotale": 120.0
-    },
-    {
-      "id": "PRN-d82906",
-      "struttura": {
-        "id": "S2",
-        "nome": "Piscina Comunale",
-        "tipologia": "Piscina",
-        "caratteristiche": [
-          "Doccia"
-        ],
-        "capienza": 20,
-        "costoBase": 8.0,
-        "disponibile": true,
-        "tipoTariffa": "PERSONA"
-      },
-      "sportivo": {
-        "id": "U1",
-        "nome": "Mario",
-        "cognome": "Rossi",
-        "email": "mario@email.it",
-        "password": "pw"
-      },
-      "data": "2026-03-01",
-      "oraInizio": "15:00",
-      "oraFine": "16:00",
-      "numeroPosti": 4,
-      "stato": "Confermata",
-      "costoTotale": 32.0
-    },
-    {
-      "id": "PRN-bf74c1",
-      "struttura": {
-        "id": "S1",
-        "nome": "Campo A",
-        "tipologia": "Tennis",
-        "caratteristiche": [
-          "Terra Rossa"
-        ],
-        "capienza": 1,
-        "costoBase": 20.0,
-        "disponibile": true,
-        "tipoTariffa": "ORARIO"
+        "tipoTariffa": "PERSONA",
+        "isOperativo": true
       },
       "sportivo": {
         "id": "U2",
         "nome": "Pietro",
         "cognome": "Alberio",
-        "email": "test@mail.com",
+        "email": "alberio@mail.com",
         "password": "12345678"
       },
-      "data": "2026-02-27",
-      "oraInizio": "19:00",
-      "oraFine": "20:00",
-      "numeroPosti": 1,
-      "stato": "Confermata",
-      "costoTotale": 20.0
-    },
-    {
-      "id": "PRN-8c7f97",
-      "struttura": {
-        "id": "S1",
-        "nome": "Campo A",
-        "tipologia": "Tennis",
-        "caratteristiche": [
-          "Terra Rossa"
-        ],
-        "capienza": 1,
-        "costoBase": 20.0,
-        "disponibile": true,
-        "tipoTariffa": "ORARIO"
-      },
-      "sportivo": {
-        "id": "U2",
-        "nome": "Pietro",
-        "cognome": "Alberio",
-        "email": "test@mail.com",
-        "password": "12345678"
-      },
-      "data": "2026-02-24",
-      "oraInizio": "12:00",
-      "oraFine": "15:00",
-      "numeroPosti": 1,
-      "stato": "Confermata",
-      "costoTotale": 60.0
-    },
-    {
-      "id": "PRN-8275a7",
-      "struttura": {
-        "id": "S1",
-        "nome": "Campo A",
-        "tipologia": "Tennis",
-        "caratteristiche": [
-          "Terra Rossa"
-        ],
-        "capienza": 1,
-        "costoBase": 20.0,
-        "disponibile": true,
-        "tipoTariffa": "ORARIO"
-      },
-      "sportivo": {
-        "id": "U2",
-        "nome": "Pietro",
-        "cognome": "Alberio",
-        "email": "test@mail.com",
-        "password": "12345678"
-      },
-      "data": "2026-03-01",
+      "data": "2026-03-14",
       "oraInizio": "18:00",
       "oraFine": "19:00",
       "numeroPosti": 1,
       "stato": "Annullata",
-      "costoTotale": 20.0
-    },
-    {
-      "id": "PRN-a0d051",
-      "struttura": {
-        "id": "S2",
-        "nome": "Piscina Comunale",
-        "tipologia": "Piscina",
-        "caratteristiche": [
-          "Doccia"
-        ],
-        "capienza": 20,
-        "costoBase": 8.0,
-        "disponibile": true,
-        "tipoTariffa": "PERSONA"
-      },
-      "sportivo": {
-        "id": "U2",
-        "nome": "Pietro",
-        "cognome": "Alberio",
-        "email": "test@mail.com",
-        "password": "12345678"
-      },
-      "data": "2026-06-21",
-      "oraInizio": "18:00",
-      "oraFine": "19:00",
-      "numeroPosti": 1,
-      "stato": "Confermata",
       "costoTotale": 13.0
     },
     {
-      "id": "PRN-3a89ef",
+      "id": "PRN-ab136a",
       "struttura": {
         "id": "S1",
         "nome": "Campo A",
@@ -204,51 +67,24 @@
           "Terra Rossa"
         ],
         "capienza": 1,
-        "costoBase": 30.0,
+        "costoBase": 20.0,
         "disponibile": true,
-        "tipoTariffa": "ORARIO"
+        "tipoTariffa": "ORARIO",
+        "isOperativo": false
       },
       "sportivo": {
-        "id": "U3",
-        "nome": "Davide",
-        "cognome": "Consoli",
-        "email": "test@.com",
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
         "password": "12345678"
       },
-      "data": "2027-12-12",
-      "oraInizio": "12:00",
-      "oraFine": "13:00",
+      "data": "2026-03-13",
+      "oraInizio": "18:00",
+      "oraFine": "19:00",
       "numeroPosti": 1,
       "stato": "Annullata",
-      "costoTotale": 30.0
-    },
-    {
-      "id": "PRN-29ab80",
-      "struttura": {
-        "id": "S2",
-        "nome": "Piscina Comunale",
-        "tipologia": "Piscina",
-        "caratteristiche": [
-          "Doccia"
-        ],
-        "capienza": 20,
-        "costoBase": 8.0,
-        "disponibile": true,
-        "tipoTariffa": "PERSONA"
-      },
-      "sportivo": {
-        "id": "U3",
-        "nome": "Davide",
-        "cognome": "Consoli",
-        "email": "test@.com",
-        "password": "12345678"
-      },
-      "data": "2026-05-23",
-      "oraInizio": "12:00",
-      "oraFine": "13:00",
-      "numeroPosti": 4,
-      "stato": "Confermata",
-      "costoTotale": 32.0
+      "costoTotale": 25.0
     }
   ],
   "elencoSportivi": [
@@ -263,66 +99,34 @@
       "id": "U2",
       "nome": "Pietro",
       "cognome": "Alberio",
-      "email": "test@mail.com",
-      "password": "12345678"
-    },
-    {
-      "id": "U3",
-      "nome": "Davide",
-      "cognome": "Consoli",
-      "email": "test@.com",
+      "email": "alberio@mail.com",
       "password": "12345678"
     }
   ],
-  "archivioSegnalazioni": [
+  "archivioSegnalazioni": [],
+  "archivioNotifiche": [
     {
-      "id": "de6834b1-5dd2-429e-91f8-5f39fc3c85a7",
-      "descrizione": "rete bucata",
-      "dataInvio": "Mar 11, 2026, 9:26:11 AM",
-      "stato": "In lavorazione",
-      "autore": {
-        "id": "U3",
-        "nome": "Davide",
-        "cognome": "Consoli",
-        "email": "test@.com",
+      "id": "c3fbafe5-ee4e-4883-83f1-19aa357c8878",
+      "messaggio": "AVVISO: La struttura \u0027Piscina Comunale\u0027 è fuori servizio. La tua prenotazione del 2026-03-14 è stata annullata.",
+      "data": "2026-03-13",
+      "destinatario": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
         "password": "12345678"
-      },
-      "strutturaCoinvolta": {
-        "id": "S1",
-        "nome": "Campo A",
-        "tipologia": "Tennis",
-        "caratteristiche": [
-          "Terra Rossa"
-        ],
-        "capienza": 1,
-        "costoBase": 30.0,
-        "disponibile": true,
-        "tipoTariffa": "ORARIO"
       }
     },
     {
-      "id": "6caeac74-941c-44ed-869a-761f0cfc3287",
-      "descrizione": "rete bucata",
-      "dataInvio": "Mar 11, 2026, 9:29:16 AM",
-      "stato": "Aperta",
-      "autore": {
-        "id": "U3",
-        "nome": "Davide",
-        "cognome": "Consoli",
-        "email": "test@.com",
+      "id": "be86445f-c50b-4a77-9172-c5b90256df1a",
+      "messaggio": "AVVISO: La struttura \u0027Campo A\u0027 è fuori servizio. La tua prenotazione del 2026-03-13 è stata annullata.",
+      "data": "2026-03-13",
+      "destinatario": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
         "password": "12345678"
-      },
-      "strutturaCoinvolta": {
-        "id": "S1",
-        "nome": "Campo A",
-        "tipologia": "Tennis",
-        "caratteristiche": [
-          "Terra Rossa"
-        ],
-        "capienza": 1,
-        "costoBase": 30.0,
-        "disponibile": true,
-        "tipoTariffa": "ORARIO"
       }
     }
   ],

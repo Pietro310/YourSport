@@ -9,6 +9,7 @@ package com.mycompany.yoursport;
  * @author anton
  */
 
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -42,7 +43,7 @@ public class Main {
             System.out.println("==========================================");
             System.out.println("1. Registrati al sistema (Test UC1)");
             System.out.println("2. Accedi come Sportivo  (Test UC2, UC4 e UC5)");
-            System.out.println("3. Accedi come Admin     (Test UC3 - Gestione Costi)");
+            System.out.println("3. Accedi come Admin     (Test UC3, UC6 e UC7)");
             System.out.println("4. Esci dal sistema");
             System.out.print("Scegli un'opzione: ");
             
@@ -108,12 +109,12 @@ public class Main {
         boolean continua = true;
         while (continua) {
             System.out.println("\n==========================================");
-            System.out.println("               AREA SPORTIVO              ");
+            System.out.println("                AREA SPORTIVO             ");
             System.out.println("==========================================");
             System.out.println("1. Nuova Prenotazione (UC2)");
             System.out.println("2. Le Mie Prenotazioni / Annulla (UC4)");
-            System.out.println("3. Segnala un guasto/problema (UC5)"); // NUOVA OPZIONE AGGIUNTA
-            System.out.println("4. Esci / Logout"); // SCALATO A 4
+            System.out.println("3. Segnala un guasto/problema (UC5)");
+            System.out.println("4. Esci / Logout");
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
@@ -144,18 +145,16 @@ public class Main {
                     }
                 }
                 
-            // INIZIO IMPLEMENTAZIONE UC5: Segnala un guasto
             } else if (opz.equals("3")) {
                 System.out.println("\n--- INVIA SEGNALAZIONE GUASTO ---");
                 
-                System.out.print("Inserisci l'ID della struttura guasta (es. CAMPO1): ");
+                System.out.print("Inserisci l'ID della struttura guasta (es. S1): ");
                 String idStrutturaGuasta = scanner.nextLine().trim();
                 
                 System.out.print("Descrivi il problema (es. Rete bucata, doccia fredda): ");
                 String descrizioneGuasto = scanner.nextLine().trim();
                 
                 try {
-                    // Chiamata all'operazione di sistema (Messaggio 1 del tuo SD)
                     Segnalazione nuovaSeg = sistema.inviaSegnalazione(idStrutturaGuasta, descrizioneGuasto);
                     
                     System.out.println("\n Segnalazione inviata con successo!");
@@ -165,7 +164,6 @@ public class Main {
                 } catch (Exception e) {
                     System.out.println("\n Si è verificato un errore imprevisto: " + e.getMessage());
                 }
-            // FINE IMPLEMENTAZIONE UC5
                 
             } else if (opz.equals("4")) {
                 continua = false;
@@ -202,7 +200,7 @@ public class Main {
             }
 
             if (risultati.isEmpty()) {
-                System.out.println("Nessuna struttura trovata con questi filtri.");
+                System.out.println("Nessuna struttura trovata con questi filtri o tutte fuori servizio.");
             } else {
                 System.out.print("4. ID Struttura da prenotare: ");
                 String id = scanner.nextLine();
@@ -236,7 +234,7 @@ public class Main {
         }
     }
 
-private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
+    private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
         // --- AUTENTICAZIONE ADMIN ---
         System.out.println("\n--- AUTENTICAZIONE ADMIN ---");
         System.out.print("Email Admin: ");
@@ -256,11 +254,12 @@ private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
         
         while (continuaAdmin) {
             System.out.println("\n==========================================");
-            System.out.println("               PANNELLO ADMIN             ");
+            System.out.println("                PANNELLO ADMIN            ");
             System.out.println("==========================================");
             System.out.println("1. Gestione Tariffe Strutture (UC3)");
-            System.out.println("2. Gestione Segnalazioni Guasti (UC6)"); // <-- NUOVA OPZIONE
-            System.out.println("3. Esci / Logout");
+            System.out.println("2. Gestione Segnalazioni Guasti (UC6)"); 
+            System.out.println("3. Sospendi Struttura per Disservizio (UC7)"); // <-- NUOVA OPZIONE
+            System.out.println("4. Esci / Logout");
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
@@ -311,7 +310,6 @@ private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
                 GestoreSegnalazioni gestoreUC6 = new GestoreSegnalazioni();
                 
                 System.out.println("\n--- ELENCO SEGNALAZIONI GUASTI ---");
-                // Messaggio 1 dell'SSD: Mostra segnalazioni
                 List<Segnalazione> listaGuasti = gestoreUC6.mostraSegnalazioni();
                 
                 if (listaGuasti == null || listaGuasti.isEmpty()) {
@@ -323,7 +321,6 @@ private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
                                            " | Stato: [" + seg.getStato().toUpperCase() + "] | Problema: " + seg.getDescrizione());
                     }
                     
-                    // Inizio del Loop dell'SSD
                     System.out.print("\nInserisci l'ID della segnalazione da aggiornare (o premi Invio per tornare indietro): ");
                     String idDaAggiornare = scanner.nextLine().trim();
                     
@@ -332,20 +329,58 @@ private static void gestisciAdmin(YourSport sistema, Scanner scanner) {
                         String nuovoStato = scanner.nextLine().trim();
                         
                         System.out.println("Elaborazione aggiornamento in corso...");
-                        // Messaggio 2 dell'SSD: Aggiorna stato
                         boolean successo = gestoreUC6.aggiornaStatoSegnalazione(idDaAggiornare, nuovoStato);
                         
                         if (successo) {
-                            System.out.println("✅ Stato aggiornato con successo a: " + nuovoStato);
+                            System.out.println("Stato aggiornato con successo a: " + nuovoStato);
                         } else {
-                            System.out.println("❌ Errore: Segnalazione non trovata. Controlla l'ID.");
+                            System.out.println("Errore: Segnalazione non trovata. Controlla l'ID.");
                         }
                     }
                 }
                 
             } else if (opz.equals("3")) {
+                // ==========================================
+                // NUOVO CODICE UC7: GESTIONE STATO STRUTTURA
+                // ==========================================
+                System.out.println("\n--- GESTIONE STATO STRUTTURE (Sospendi/Riattiva) ---");
+                List<Struttura> catalogo = sistema.mostraCatalogo();
+                
+                // Mostro le strutture con il loro stato attuale
+                for (Struttura s : catalogo) {
+                    String statoStruttura = s.isOperativo() ? "OPERATIVA" : "FUORI SERVIZIO";
+                    System.out.println(" - ID: [" + s.getId() + "] " + s.getNome() + " (" + statoStruttura + ")");
+                }
+
+                System.out.print("\nInserisci l'ID della struttura da modificare (o premi Invio per annullare): ");
+                String idTarget = scanner.nextLine().trim();
+
+                if (!idTarget.isEmpty()) {
+                    Struttura sTarget = sistema.getStruttura(idTarget);
+                    
+                    if (sTarget != null) {
+                        GestoreStrutture gestoreUC7 = new GestoreStrutture();
+                        
+                        // INTERRUTTORE INTELLIGENTE
+                        if (sTarget.isOperativo()) {
+                            // Se è operativa, la sospendiamo
+                            System.out.println("Elaborazione sospensione e annullamento prenotazioni in corso...");
+                            gestoreUC7.sospendiStruttura(idTarget);
+                            System.out.println(">>> SUCCESSO: La struttura è stata chiusa. Gli sportivi sono stati notificati. <<<");
+                        } else {
+                            // Se è fuori servizio, la riattiviamo
+                            System.out.println("Elaborazione riattivazione in corso...");
+                            gestoreUC7.riattivaStruttura(idTarget);
+                            System.out.println(">>> SUCCESSO: La struttura è di nuovo OPERATIVA e pronta per essere prenotata! <<<");
+                        }
+                    } else {
+                        System.out.println(">>> ERRORE: Struttura non trovata. Controlla l'ID inserito. <<<");
+                    }
+                    
+                  }
+                } else if (opz.equals("4")) {
                 continuaAdmin = false;
-                sistema.logout(); // Corretto per uscire dalla sessione Admin
+                sistema.logout(); 
                 System.out.println("Logout Admin effettuato. Ritorno al menu principale.");
             } else {
                 System.out.println("Opzione non valida.");

@@ -10,6 +10,10 @@ package com.mycompany.yoursport;
  */
 
 
+/**
+ *
+ * @author pietroalberio
+ */
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,6 +28,7 @@ public class YourSport {
     private List<Prenotazione> archivioPrenotazioni;
     private List<Sportivo> elencoSportivi;
     private List<Segnalazione> archivioSegnalazioni;
+    private List<Notifica> archivioNotifiche; // <-- AGGIUNTO PER UC7
     private Admin amministratore;
     private Prenotazione prenotazioneCorrente;
     private Sportivo currentUser;
@@ -33,6 +38,7 @@ public class YourSport {
         this.archivioPrenotazioni = new ArrayList<>();
         this.elencoSportivi = new ArrayList<>();
         this.archivioSegnalazioni = new ArrayList<>();
+        this.archivioNotifiche = new ArrayList<>(); // <-- INIZIALIZZATO PER UC7
         inizializzaDatiTest();
     }
 
@@ -59,21 +65,21 @@ public class YourSport {
         }
         for (Segnalazione seg : this.archivioSegnalazioni) {
     
-    // Ricollega l'autore (Sportivo)
-    if (seg.getAutore() != null) {
-        Sportivo veroAutore = this.getSportivo(seg.getAutore().getId());
-        if (veroAutore != null) {
-            seg.setAutore(veroAutore);
+            // Ricollega l'autore (Sportivo)
+            if (seg.getAutore() != null) {
+                Sportivo veroAutore = this.getSportivo(seg.getAutore().getId());
+                if (veroAutore != null) {
+                    seg.setAutore(veroAutore);
+                }
+            }
+            if (seg.getStrutturaCoinvolta() != null) {
+                Struttura veraStruttura = this.getStruttura(seg.getStrutturaCoinvolta().getId());
+                if (veraStruttura != null) {
+                    seg.setStrutturaCoinvolta(veraStruttura);
+                }
+            }
         }
     }
-    if (seg.getStrutturaCoinvolta() != null) {
-        Struttura veraStruttura = this.getStruttura(seg.getStrutturaCoinvolta().getId());
-        if (veraStruttura != null) {
-            seg.setStrutturaCoinvolta(veraStruttura);
-        }
-    }
-   }
-  }
 
     // ==========================================
     // SISTEMA DI AUTENTICAZIONE
@@ -131,7 +137,8 @@ public class YourSport {
         System.out.println("--- Ricerca Strutture compatibili per il " + data + " ---");
         List<Struttura> risultato = new ArrayList<>();
         for (Struttura s : catalogoStrutture) {
-            if (s.corrisponde(tipologia, caratteristiche)) {
+            // ---> MODIFICA UC7: Aggiunto controllo s.isOperativo() <---
+            if (s.isOperativo() && s.corrisponde(tipologia, caratteristiche)) {
                 risultato.add(s);
             }
         }
@@ -159,6 +166,12 @@ public class YourSport {
 
         Struttura s = getStruttura(idStruttura);
         if (s == null) throw new IllegalArgumentException("Struttura non trovata");
+
+        // ---> MODIFICA UC7: Blocco immediato se la struttura non è operativa <---
+        if (!s.isOperativo()) {
+            System.out.println("ERRORE: Struttura attualmente fuori servizio per manutenzione.");
+            return null;
+        }
 
         if (!isRisorsaDisponibile(s, data, oraInizio, oraFine, numeroPostiRichiesti)) {
             System.out.println("ERRORE: Struttura piena o non disponibile in questo orario specifico!");
@@ -235,7 +248,7 @@ public class YourSport {
     }
 
       // --------------------------------------------------------
-      //UC5
+      // UC5: INVIA SEGNALAZIONE
       // --------------------------------------------------------
     public Segnalazione inviaSegnalazione(String idStruttura, String descrizione) {
         
@@ -265,7 +278,7 @@ public class YourSport {
     
     
       // --------------------------------------------------------
-      //UC6
+      // UC6: GESTIONE SEGNALAZIONI
       // --------------------------------------------------------
     
     // Restituisce l'intera lista al Gestore
@@ -288,7 +301,32 @@ public class YourSport {
         return null; // Ritorna null se non la trova (gestito dal riquadro opt dell'SD!)
     }
 
+    // ==========================================
+    // UC7: NOTIFICHE E DISSERVIZI (AGGIUNTE PER GESTORESTRUTTURE)
+    // ==========================================
     
+    // Salva la notifica nel sistema
+    public void aggiungiNotifica(Notifica n) {
+        this.archivioNotifiche.add(n);
+    }
+    
+    
+    // Trova le prenotazioni future di una struttura specifica
+    public List<Prenotazione> getPrenotazioniFuture(String idStruttura) {
+        List<Prenotazione> future = new ArrayList<>();
+        LocalDate oggi = LocalDate.now();
+        
+        for (Prenotazione p : this.archivioPrenotazioni) {
+            if (p.getStruttura().getId().equals(idStruttura) && 
+               !p.getStato().equalsIgnoreCase("Annullata") &&
+               (p.getData().isEqual(oggi) || p.getData().isAfter(oggi))) {
+                
+                future.add(p);
+            }
+        }
+        return future;
+    }
+
     // ==========================================
     // getter e setter
     // ==========================================
@@ -321,6 +359,10 @@ public class YourSport {
     public Admin getAmministratore() {
         return amministratore;
     }
+    
+    public List<Notifica> getArchivioNotifiche() {
+        return this.archivioNotifiche;
+    }
 
     private void inizializzaDatiTest() {
         this.amministratore = new Admin("A1", "Super", "Admin", "admin@yoursport.it", "adminpass");
@@ -335,6 +377,8 @@ public class YourSport {
         this.prenotazioneCorrente = null;
         this.catalogoStrutture.clear();
         this.elencoSportivi.clear();
+        this.archivioSegnalazioni.clear();
+        this.archivioNotifiche.clear(); // <-- AGGIUNTO PER UC7
         inizializzaDatiTest();
     }
 }
