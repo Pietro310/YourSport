@@ -114,7 +114,8 @@ public class Main {
             System.out.println("1. Nuova Prenotazione (UC2)");
             System.out.println("2. Le Mie Prenotazioni / Annulla (UC4)");
             System.out.println("3. Segnala un guasto/problema (UC5)");
-            System.out.println("4. Esci / Logout");
+            System.out.println("4. Le Mie Notifiche (UC8)"); // <-- NUOVA OPZIONE
+            System.out.println("5. Esci / Logout"); // <-- SCALATO A 5
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
@@ -163,9 +164,24 @@ public class Main {
                     System.out.println("\n Errore durante l'invio: " + e.getMessage());
                 } catch (Exception e) {
                     System.out.println("\n Si è verificato un errore imprevisto: " + e.getMessage());
+                }     
+            } else if (opz.equals("4")) {
+
+                System.out.println("\n--- LE TUE NOTIFICHE ---");
+                
+                GestoreNotifiche gestoreUC8 = new GestoreNotifiche();
+                List<Notifica> mieNotifiche = gestoreUC8.mostraNotifiche();
+                
+                if (mieNotifiche == null || mieNotifiche.isEmpty()) {
+                    System.out.println("La tua bacheca è vuota. Nessuna nuova notifica.");
+                } else {
+                    // Stampa le notifiche (dalla più vecchia alla più recente, come sono state salvate)
+                    for (Notifica n : mieNotifiche) {
+                        System.out.println("[" + n.getData() + "] " + n.getMessaggio());
+                    }
                 }
                 
-            } else if (opz.equals("4")) {
+            } else if (opz.equals("5")) { // <-- RICORDATI DI CAMBIARE IL LOGOUT DA 4 A 5
                 continua = false;
                 sistema.logout();
                 System.out.println("Logout effettuato.");
@@ -258,8 +274,9 @@ public class Main {
             System.out.println("==========================================");
             System.out.println("1. Gestione Tariffe Strutture (UC3)");
             System.out.println("2. Gestione Segnalazioni Guasti (UC6)"); 
-            System.out.println("3. Sospendi Struttura per Disservizio (UC7)"); // <-- NUOVA OPZIONE
-            System.out.println("4. Esci / Logout");
+            System.out.println("3. Sospendi Struttura per Disservizio (UC7)");
+            System.out.println("4. Statistiche Incassi (UC9)");
+            System.out.println("5. Esci / Logout");
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
@@ -378,7 +395,37 @@ public class Main {
                     }
                     
                   }
-                } else if (opz.equals("4")) {
+                }
+            
+             else if (opz.equals("4")) {
+                // ==========================================
+                // IMPLEMENTAZIONE UC9: STATISTICHE INCASSI
+                // ==========================================
+                System.out.println("\n--- CALCOLO INCASSI PREVISTI ---");
+                try {
+                    System.out.print("Inserisci data di INIZIO periodo (YYYY-MM-DD): ");
+                    String strInizio = scanner.nextLine();
+                    java.time.LocalDate dataInizio = java.time.LocalDate.parse(strInizio);
+
+                    System.out.print("Inserisci data di FINE periodo (YYYY-MM-DD): ");
+                    String strFine = scanner.nextLine();
+                    java.time.LocalDate dataFine = java.time.LocalDate.parse(strFine);
+
+                    // Chiamata al sistema (Messaggio 1)
+                    double totale = sistema.generaReportIncassi(dataInizio, dataFine);
+
+                    System.out.println("\n==================================");
+                    System.out.println("REPORT INCASSI");
+                    System.out.println("Periodo: " + dataInizio + " -> " + dataFine);
+                    // Formatto a 2 decimali come veri Euro
+                    System.out.printf("Totale Previsto: € %.2f\n", totale); 
+                    System.out.println("==================================");
+
+                } catch (Exception e) {
+                    System.out.println("ERRORE: Formato data non valido. Usa il formato YYYY-MM-DD.");
+                }
+            
+             }else if (opz.equals("5")) {
                 continuaAdmin = false;
                 sistema.logout(); 
                 System.out.println("Logout Admin effettuato. Ritorno al menu principale.");

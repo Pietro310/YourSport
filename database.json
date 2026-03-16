@@ -11,7 +11,7 @@
       "costoBase": 20.0,
       "disponibile": true,
       "tipoTariffa": "ORARIO",
-      "isOperativo": false
+      "isOperativo": true
     },
     {
       "id": "S2",
@@ -24,7 +24,7 @@
       "costoBase": 8.0,
       "disponibile": true,
       "tipoTariffa": "PERSONA",
-      "isOperativo": true
+      "isOperativo": false
     }
   ],
   "archivioPrenotazioni": [
@@ -85,6 +85,93 @@
       "numeroPosti": 1,
       "stato": "Annullata",
       "costoTotale": 25.0
+    },
+    {
+      "id": "PRN-23bd25",
+      "struttura": {
+        "id": "S1",
+        "nome": "Campo A",
+        "tipologia": "Tennis",
+        "caratteristiche": [
+          "Terra Rossa"
+        ],
+        "capienza": 1,
+        "costoBase": 20.0,
+        "disponibile": true,
+        "tipoTariffa": "ORARIO",
+        "isOperativo": false
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-03-16",
+      "oraInizio": "17:00",
+      "oraFine": "18:00",
+      "numeroPosti": 1,
+      "stato": "Annullata",
+      "costoTotale": 20.0
+    },
+    {
+      "id": "PRN-34d82e",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA",
+        "isOperativo": false
+      },
+      "sportivo": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
+        "password": "12345678"
+      },
+      "data": "2026-06-12",
+      "oraInizio": "13:00",
+      "oraFine": "14:00",
+      "numeroPosti": 3,
+      "stato": "Annullata",
+      "costoTotale": 24.0
+    },
+    {
+      "id": "PRN-cbc89e",
+      "struttura": {
+        "id": "S2",
+        "nome": "Piscina Comunale",
+        "tipologia": "Piscina",
+        "caratteristiche": [
+          "Doccia"
+        ],
+        "capienza": 20,
+        "costoBase": 8.0,
+        "disponibile": true,
+        "tipoTariffa": "PERSONA",
+        "isOperativo": false
+      },
+      "sportivo": {
+        "id": "U1",
+        "nome": "Mario",
+        "cognome": "Rossi",
+        "email": "mario@email.it",
+        "password": "pw"
+      },
+      "data": "2026-06-21",
+      "oraInizio": "15:00",
+      "oraFine": "16:00",
+      "numeroPosti": 1,
+      "stato": "Annullata",
+      "costoTotale": 8.0
     }
   ],
   "elencoSportivi": [
@@ -127,6 +214,42 @@
         "cognome": "Alberio",
         "email": "alberio@mail.com",
         "password": "12345678"
+      }
+    },
+    {
+      "id": "b6a3881a-6279-4daf-bb8b-2c85b0efe610",
+      "messaggio": "AVVISO: La struttura \u0027Campo A\u0027 è fuori servizio. La tua prenotazione del 2026-03-16 è stata annullata.",
+      "data": "2026-03-16",
+      "destinatario": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
+        "password": "12345678"
+      }
+    },
+    {
+      "id": "a95e3f08-c2d2-4c7c-8710-64433aa988b7",
+      "messaggio": "AVVISO: La struttura \u0027Piscina Comunale\u0027 è fuori servizio. La tua prenotazione del 2026-06-12 è stata annullata.",
+      "data": "2026-03-16",
+      "destinatario": {
+        "id": "U2",
+        "nome": "Pietro",
+        "cognome": "Alberio",
+        "email": "alberio@mail.com",
+        "password": "12345678"
+      }
+    },
+    {
+      "id": "3e31d0df-ab52-4c00-af21-4702e4368d5b",
+      "messaggio": "AVVISO: La struttura \u0027Piscina Comunale\u0027 è fuori servizio. La tua prenotazione del 2026-06-21 è stata annullata.",
+      "data": "2026-03-16",
+      "destinatario": {
+        "id": "U1",
+        "nome": "Mario",
+        "cognome": "Rossi",
+        "email": "mario@email.it",
+        "password": "pw"
       }
     }
   ],

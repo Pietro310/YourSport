@@ -9,12 +9,6 @@ package com.mycompany.yoursport;
  * @author pietroalberio
  */
 
-
-/**
- *
- * @author pietroalberio
- */
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -317,7 +311,7 @@ public class YourSport {
         LocalDate oggi = LocalDate.now();
         
         for (Prenotazione p : this.archivioPrenotazioni) {
-            if (p.getStruttura().getId().equals(idStruttura) && 
+            if (p.getStruttura().getId().equalsIgnoreCase(idStruttura) && 
                !p.getStato().equalsIgnoreCase("Annullata") &&
                (p.getData().isEqual(oggi) || p.getData().isAfter(oggi))) {
                 
@@ -325,6 +319,59 @@ public class YourSport {
             }
         }
         return future;
+    }
+    
+    // ==========================================
+    // UC8: VISUALIZZA NOTIFICHE
+    // ==========================================
+    public List<Notifica> getNotificheUtente(Sportivo utente) {
+        List<Notifica> listaNotifiche = new java.util.ArrayList<>();
+        
+        // Frammento [loop] dell'SD
+        for (Notifica n : this.archivioNotifiche) {
+            
+            // Frammento [opt] dell'SD: controllo se il destinatario è l'utente loggato
+            // (è la stessa logica di == utente)
+            if (n.getDestinatario().getId().equals(utente.getId())) {
+                
+                // Messaggio 1.2.1 (Il Self-Message)
+                listaNotifiche.add(n);
+            }
+        }
+        return listaNotifiche;
+    }
+    
+    // ==========================================
+    // UC9: STATISTICHE INCASSI PREVISTI
+    // ==========================================
+    
+    // Messaggio 1 dell'SD
+    public double generaReportIncassi(LocalDate dataInizio, LocalDate dataFine) {
+        double totaleIncassi = 0.0; // Variabile locale per sommare i soldi
+        
+        // Frammento [loop] dell'SD
+        for (Prenotazione p : this.archivioPrenotazioni) {
+            
+            // Frammento [opt] dell'SD: Controllo Date e Stato "Confermata"
+            // isBefore e isAfter sono l'equivalente elegante di >= e <= in Java per le date
+            boolean nelPeriodo = !p.getData().isBefore(dataInizio) && !p.getData().isAfter(dataFine);
+            boolean isConfermata = p.getStato().equalsIgnoreCase("Confermata");
+            
+            if (nelPeriodo && isConfermata) {
+                // Messaggio 1.1
+                double c = p.getCostoTotale(); 
+                
+                // Messaggio 1.2 (Self-Message per sommare)
+                totaleIncassi = aggiornaTotale(totaleIncassi, c);
+            }
+        }
+        
+        return totaleIncassi;
+    }
+
+    // Metodo privato per il Self-Message 1.2
+    private double aggiornaTotale(double parziale, double costoAggiuntivo) {
+        return parziale + costoAggiuntivo;
     }
 
     // ==========================================
