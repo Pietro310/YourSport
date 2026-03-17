@@ -373,6 +373,57 @@ public class YourSport {
     private double aggiornaTotale(double parziale, double costoAggiuntivo) {
         return parziale + costoAggiuntivo;
     }
+    
+    
+    // ==========================================
+    // UC10: GESTIONE PROFILO PERSONALE
+    // ==========================================
+
+    // Metodo per il 1° SD (Visualizzazione)
+    public String visualizzaProfilo() {
+        if (currentUser != null) {
+            return currentUser.getDati(); // Chiama il getDati() ereditato da Utente
+        }
+        return "Errore: Nessun utente loggato.";
+    }
+
+    // Metodo per il 2° SD (Aggiornamento)
+    public boolean aggiornaProfilo(String nuovoNome, String nuovoCognome, String nuovaEmail, String nuovaPassword) {
+        if (currentUser == null) return false;
+
+        // Self-Message 1.1: Validazione
+        if (!validaDati(nuovaEmail)) {
+            return false; // Esito: Errore
+        }
+
+        // Frammento [opt]: I dati sono validi, chiamo i setter
+        currentUser.setNome(nuovoNome);
+        currentUser.setCognome(nuovoCognome);
+        currentUser.setEmail(nuovaEmail);
+        currentUser.setPassword(nuovaPassword);
+
+        // Salvataggio nel database
+        GestoreJSON.salvaDati(this); 
+        
+        return true; // Esito: Successo
+    }
+
+    // Self-Message privato
+    private boolean validaDati(String nuovaEmail) {
+        if (nuovaEmail == null || nuovaEmail.trim().isEmpty() || !nuovaEmail.contains("@")) {
+            System.out.println("ERRORE: Formato email non valido.");
+            return false;
+        }
+
+        // Verifica che l'email non sia già usata da UN ALTRO utente
+        for (Sportivo s : elencoSportivi) {
+            if (s.getEmail().equalsIgnoreCase(nuovaEmail) && !s.getId().equals(currentUser.getId())) {
+                System.out.println("ERRORE: Email già in uso da un altro account.");
+                return false;
+            }
+        }
+        return true;
+    }
 
     // ==========================================
     // getter e setter

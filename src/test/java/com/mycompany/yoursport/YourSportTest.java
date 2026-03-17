@@ -439,5 +439,68 @@ public class YourSportTest {
 
         assertTrue(totale == 0.0, "Se le date sono invertite, il loop non trova corrispondenze e deve restituire 0.0");
     }
+    
+    // =========================================================
+    // TEST UC10: GESTIONE PROFILO PERSONALE
+    // =========================================================
+
+    @Test
+    public void testVisualizzaProfilo_Loggato() {
+        System.out.println("Test UC10: Visualizzazione Profilo");
+        YourSport sistema = YourSport.getInstance();
+        sistema.resetSistemaPerTest();
+
+        // 1. Facciamo il login con l'utente di test (Mario Rossi)
+        sistema.login("mario@email.it", "pw");
+
+        // 2. Chiamiamo il metodo per visualizzare i dati
+        String datiMostrati = sistema.visualizzaProfilo();
+
+        // 3. Verifica: la stringa stampata deve contenere il nome "Mario"
+        assertTrue(datiMostrati.contains("Mario"), "Il sistema deve restituire i dati dell'utente loggato");
+    }
+
+    @Test
+    public void testAggiornaProfilo_DatiValidi() {
+        System.out.println("Test UC10: Aggiornamento Profilo con Successo");
+        YourSport sistema = YourSport.getInstance();
+        sistema.resetSistemaPerTest();
+        
+        sistema.login("mario@email.it", "pw");
+
+        // 1. ESECUZIONE (ACT): L'utente Mario cambia tutti i suoi dati
+        boolean esito = sistema.aggiornaProfilo("Luigi", "Verdi", "luigi@email.it", "nuovapw");
+
+        // 2. VERIFICA (ASSERT): Il metodo deve restituire true (successo)
+        assertTrue(esito == true, "L'aggiornamento con dati validi deve andare a buon fine");
+        
+        // 3. Verifichiamo che i dati in memoria siano effettivamente cambiati!
+        Sportivo utente = sistema.getCurrentUser();
+        assertTrue(utente.getNome().equals("Luigi"), "Il nome doveva cambiare in Luigi");
+        assertTrue(utente.getEmail().equals("luigi@email.it"), "L'email doveva cambiare in luigi@email.it");
+    }
+
+    @Test
+    public void testAggiornaProfilo_EmailGiaInUso() {
+        System.out.println("Test UC10: Aggiornamento fallito per Email duplicata");
+        YourSport sistema = YourSport.getInstance();
+        sistema.resetSistemaPerTest();
+
+        // 1. Creiamo un SECONDO utente nel sistema per fare il conflitto
+        sistema.registrazioneSportivo("Anna", "Bianchi", "anna@email.it", "pw");
+
+        // 2. Facciamo il login con il primo utente (Mario)
+        sistema.login("mario@email.it", "pw");
+
+        // 3. ESECUZIONE: Mario tenta di rubare l'email di Anna!
+        boolean esito = sistema.aggiornaProfilo("Mario", "Rossi", "anna@email.it", "pw");
+
+        // 4. VERIFICA: L'operazione deve fallire (esito falso)
+        assertTrue(esito == false, "Il sistema deve bloccare l'aggiornamento se l'email è già di qualcun altro");
+        
+        // 5. Verifichiamo che l'email di Mario sia rimasta quella originale e non sia stata sporcata
+        Sportivo utente = sistema.getCurrentUser();
+        assertTrue(utente.getEmail().equals("mario@email.it"), "L'email originale deve rimanere intatta");
+    }
 
 }

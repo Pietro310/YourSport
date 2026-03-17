@@ -114,8 +114,9 @@ public class Main {
             System.out.println("1. Nuova Prenotazione (UC2)");
             System.out.println("2. Le Mie Prenotazioni / Annulla (UC4)");
             System.out.println("3. Segnala un guasto/problema (UC5)");
-            System.out.println("4. Le Mie Notifiche (UC8)"); // <-- NUOVA OPZIONE
-            System.out.println("5. Esci / Logout"); // <-- SCALATO A 5
+            System.out.println("4. Le Mie Notifiche (UC8)"); 
+            System.out.println("5. Area personale (UC10)"); 
+            System.out.println("6. Esci / Logout"); 
             System.out.print("Scegli un'opzione: ");
             
             String opz = scanner.nextLine().trim();
@@ -175,13 +176,64 @@ public class Main {
                 if (mieNotifiche == null || mieNotifiche.isEmpty()) {
                     System.out.println("La tua bacheca è vuota. Nessuna nuova notifica.");
                 } else {
-                    // Stampa le notifiche (dalla più vecchia alla più recente, come sono state salvate)
+                    // Stampa le notifiche
                     for (Notifica n : mieNotifiche) {
                         System.out.println("[" + n.getData() + "] " + n.getMessaggio());
                     }
                 }
                 
-            } else if (opz.equals("5")) { // <-- RICORDATI DI CAMBIARE IL LOGOUT DA 4 A 5
+              } else if (opz.equals("5")) {
+                
+                boolean datiValidi = false;
+                boolean vuoleRiprovare = true;
+
+                while (!datiValidi && vuoleRiprovare) {
+                    
+                    System.out.println("\n--- I TUOI DATI ATTUALI ---");
+                    System.out.println(sistema.visualizzaProfilo());
+                    System.out.println("---------------------------");
+
+                   
+                    System.out.print("\nVuoi modificare i tuoi dati? (S per continuare, N per annullare): ");
+                    String sceltaModifica = scanner.nextLine().trim();
+                    
+                    if (!sceltaModifica.equalsIgnoreCase("s")) {
+                        vuoleRiprovare = false;
+                        System.out.println("Operazione annullata. Torno al menù principale.");
+                        break; 
+                    }
+
+                    System.out.println("\n--- INSERISCI I NUOVI DATI ---");
+                    
+                    System.out.print("Nuovo Nome: ");
+                    String nNome = scanner.nextLine().trim();
+                    
+                    System.out.print("Nuovo Cognome: ");
+                    String nCognome = scanner.nextLine().trim();
+                    
+                    System.out.print("Nuova Email: ");
+                    String nEmail = scanner.nextLine().trim();
+                    
+                    System.out.print("Nuova Password: ");
+                    String nPassword = scanner.nextLine().trim();
+
+                    // Chiamata al sistema
+                    boolean esito = sistema.aggiornaProfilo(nNome, nCognome, nEmail, nPassword);
+
+                    if (esito == true) {
+                        System.out.println(">>> Profilo aggiornato con successo! <<<");
+                        datiValidi = true; // Interrompe il ciclo per successo
+                    } else {
+                        System.out.print("\nDati errati o email già in uso. Vuoi riprovare? (S/N): ");
+                        String sceltaRiprov = scanner.nextLine().trim();
+                        if (!sceltaRiprov.equalsIgnoreCase("s")) {
+                            vuoleRiprovare = false; // Interrompe il ciclo per volontà dell'utente
+                            System.out.println("Torno al menù principale.");
+                        }
+                    }
+                }
+                
+            } else if (opz.equals("6")) { 
                 continua = false;
                 sistema.logout();
                 System.out.println("Logout effettuato.");

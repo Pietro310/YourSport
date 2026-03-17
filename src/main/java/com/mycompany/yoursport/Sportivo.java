@@ -39,4 +39,8 @@ public class Sportivo extends Utente {
         }
         this.elencoPrenotazioni.add(p);
     }
+
+
+    
+    
 }

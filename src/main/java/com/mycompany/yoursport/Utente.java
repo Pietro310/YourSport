@@ -30,4 +30,34 @@ public abstract class Utente {
     public String getCognome() { return cognome; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
+
+    // Metodo 1.1 dell'SD: Lettura dei dati
+    public String getDati() {
+        return "Nome: " + this.nome + "\n" +
+               "Cognome: " + this.cognome + "\n" +
+               "Email: " + this.email + "\n" +
+               "Password: " + this.password;
+    }
+    
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 }
