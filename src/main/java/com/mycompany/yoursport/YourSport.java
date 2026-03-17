@@ -410,6 +410,10 @@ public class YourSport {
     public List<Notifica> getArchivioNotifiche() {
         return this.archivioNotifiche;
     }
+    
+    public List<Prenotazione> getArchivioPrenotazioni() {
+        return this.archivioPrenotazioni;
+    }
 
     private void inizializzaDatiTest() {
         this.amministratore = new Admin("A1", "Super", "Admin", "admin@yoursport.it", "adminpass");

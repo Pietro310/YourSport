@@ -362,5 +362,82 @@ public class YourSportTest {
                    eccezione.getMessage().toLowerCase().contains("trovata"), 
                    "Il messaggio di errore deve indicare che l'ID della struttura non è valido");
     }
+     
+
+   // =========================================================
+    // TEST UC9: STATISTICHE INCASSI PREVISTI
+    // =========================================================
+
+    @Test
+    public void testGeneraReportIncassi() {
+        System.out.println("Test UC9: Calcolo Incassi");
+        
+        // 1. Otteniamo l'istanza del sistema
+        YourSport sistema = YourSport.getInstance();
+
+        // 2. Creiamo la Lista delle caratteristiche (da Struttura)
+        List<String> caratteristiche = new ArrayList<>();
+        caratteristiche.add("Illuminazione");
+        caratteristiche.add("Spogliatoio");
+
+        // 3. Creiamo la Struttura
+        Struttura campoTest = new Struttura("S-TEST", "Campo Centrale", "Tennis", caratteristiche, 4, 20, true, "Oraria");
+
+        // 4. Creiamo lo Sportivo 
+        Sportivo utenteTest = new Sportivo("U-TEST", "Mario", "Rossi", "mario@email.it", "pw");
+
+        // 5. Prepariamo Date e Orari (Data lontana nel futuro per non sporcare altri test)
+        LocalDate dataTarget = LocalDate.now().plusYears(10); 
+        LocalTime oraInizio = LocalTime.of(10, 0);
+        LocalTime oraFine = LocalTime.of(11, 0);
+
+        // 6. Creiamo la Prenotazione
+        Prenotazione p1 = new Prenotazione(campoTest, utenteTest, dataTarget, oraInizio, oraFine, 1);
+        
+        // Impostiamo lo stato su "Confermata"
+        p1.setStato("Confermata");
+
+        // 7. SALVIAMO LA PRENOTAZIONE NEL SISTEMA
+        sistema.getArchivioPrenotazioni().add(p1); 
+
+        // 8. ESECUZIONE (ACT): Calcoliamo gli incassi per quel periodo specifico
+        LocalDate dataInizio = dataTarget.minusDays(1);
+        LocalDate dataFine = dataTarget.plusDays(1);
+        
+        double totale = sistema.generaReportIncassi(dataInizio, dataFine);
+
+        // 9. VERIFICA (ASSERT)
+        assertTrue(totale >= 0.0, "Il calcolo deve concludersi correttamente senza errori, restituendo un valore >= 0");
+    }
+
+    @Test
+    public void testGeneraReportIncassi_NessunIncasso() {
+        System.out.println("Test UC9: Calcolo Incassi (Periodo vuoto)");
+        YourSport sistema = YourSport.getInstance();
+        sistema.resetSistemaPerTest();
+
+        // Chiediamo il report per due mesi fa (non ci sono dati)
+        LocalDate dataInizio = LocalDate.now().minusMonths(2);
+        LocalDate dataFine = LocalDate.now().minusMonths(1);
+
+        double totale = sistema.generaReportIncassi(dataInizio, dataFine);
+
+        assertTrue(totale == 0.00, "Se non ci sono prenotazioni nel periodo richiesto, il totale deve essere 0.0");
+    }
+
+    @Test
+    public void testGeneraReportIncassi_DateInvertite() {
+        System.out.println("Test UC9: Calcolo Incassi (Date invertite)");
+        YourSport sistema = YourSport.getInstance();
+        sistema.resetSistemaPerTest();
+
+        // L'Admin sbaglia e mette la fine prima dell'inizio
+        LocalDate dataInizio = LocalDate.now().plusDays(7);
+        LocalDate dataFine = LocalDate.now(); 
+
+        double totale = sistema.generaReportIncassi(dataInizio, dataFine);
+
+        assertTrue(totale == 0.0, "Se le date sono invertite, il loop non trova corrispondenze e deve restituire 0.0");
+    }
 
 }
