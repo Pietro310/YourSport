@@ -1,0 +1,11 @@
+
+Titolo: YourSport
+ 
+Descrizione: Il progetto prevede la realizzazione di un sistema software per la gestione completa di un centro sportivo multiservizi (campi da calcio, tennis, piscine, ecc.). L'obiettivo è digitalizzare il processo di prenotazione e la gestione delle risorse della struttura. Il sistema gestisce principalmente due tipologie di attori:
+- Amministratori: Hanno il compito di gestire le strutture;
+- Utenti Registrati: Possono visualizzare la disponibilità delle strutture, effettuare prenotazioni e gestire le proprie attività.
+L'accesso alle prenotazioni è garantito tramite autenticazione (tessera). Il sistema prevede una gestione economica basata su un portafoglio virtuale (crediti): il costo delle strutture è dinamico e varia in base alla tipologia di campo e alla fascia oraria selezionata (es. tariffe maggiorate nelle ore di punta).
+
+-Davide Consoli 1000016099
+-Antonino Caruso 1000016216
+-Pietro Alberio 1000016054

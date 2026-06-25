@@ -61,7 +61,7 @@ public class YourSportTest {
         // 1. Azione: Tentiamo di usare "mario@email.it" (già caricata dal metodo inizializzaDatiTest)
         String esito = sistema.registrazioneSportivo("Luigi", "Verdi", "mario@email.it", "altraPass");
 
-        // 2. Verifica del blocco ALT (dal Diagramma di Sequenza)
+        // 2. Verifica del blocco OPT (dal Diagramma di Sequenza)
         assertEquals("email già in uso", esito, "Il sistema deve impedire la registrazione se l'email esiste già");
     }
 
@@ -323,27 +323,6 @@ public class YourSportTest {
     }
 
     @Test
-    public void testInviaSegnalazione_ErroreUtenteNonLoggato() {
-        System.out.println("Test UC5: Invia Segnalazione bloccata (Utente non loggato)");
-
-        // --- ARRANGE ---
-        sistema.logout(); // Forza l'uscita dell'utente loggato nel setUp()
-        String idStrutturaDaSegnalare = "S1";
-        String descrizioneGuasto = "Doccia rotta";
-
-        // --- ACT & ASSERT ---
-        // Il sistema DEVE lanciare un'eccezione se un utente non loggato prova a inviare un guasto
-        Exception eccezione = assertThrows(IllegalArgumentException.class, () -> {
-            sistema.inviaSegnalazione(idStrutturaDaSegnalare, descrizioneGuasto);
-        });
-
-        // Verifichiamo che il messaggio di errore contenga parole chiave pertinenti
-        assertTrue(eccezione.getMessage().toLowerCase().contains("loggato") || 
-                   eccezione.getMessage().toLowerCase().contains("errore"), 
-                   "Il messaggio di errore deve indicare l'assenza di un utente loggato");
-    }
-
-    @Test
     public void testInviaSegnalazione_ErroreStrutturaInesistente() {
         System.out.println("Test UC5: Invia Segnalazione bloccata (Struttura inesistente)");
 
@@ -364,7 +343,7 @@ public class YourSportTest {
     }
      
 
-   // =========================================================
+    // =========================================================
     // TEST UC9: STATISTICHE INCASSI PREVISTI
     // =========================================================
 

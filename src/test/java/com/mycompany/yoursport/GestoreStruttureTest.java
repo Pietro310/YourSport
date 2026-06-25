@@ -55,7 +55,9 @@ public class GestoreStruttureTest {
     public void tearDown() {
         sistema.resetSistemaPerTest(); // Pulizia finale
     }
-
+    // =========================================================
+    // UC7: Sospensione e riattivazione struttura
+    // =========================================================
     // =========================================================
     // TEST 1: Sospensione Riuscita (Scenario Principale UC7)
     // =========================================================

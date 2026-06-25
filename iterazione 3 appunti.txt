@@ -1,0 +1,5 @@
+iterazione 3 
+
+-abbiamo cambiato il parametro stato della classe prenotazione da boolean a string;
+
+-abbiamo modificato il programma affinché non sia possibile prenotare una risorsa in una data passata o in un orario passato della giornata attuale
