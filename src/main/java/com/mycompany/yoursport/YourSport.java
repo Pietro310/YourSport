@@ -255,7 +255,7 @@ public class YourSport {
         // Messaggio 1.2: Recupera chi è loggato in questo momento (metodo privato di supporto)
         Sportivo currentUser = this.getCurrentUser();
         
-        // (Opzionale: piccolo controllo di sicurezza per evitare che Java vada in crash)
+       
         if (str == null || currentUser == null) {
             throw new IllegalArgumentException("Errore: struttura non trovata o utente non loggato");
         }
