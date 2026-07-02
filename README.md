@@ -6,22 +6,22 @@ Progetto realizzato per il corso di Ingegneria del Software del Corso di Laurea 
 
 ## Autori
 
-•⁠  ⁠Antonino Caruso
-•⁠  ⁠Davide Consoli
-•⁠  ⁠Pietro Alberio
+- Antonino Caruso
+- Davide Consoli
+- Pietro Alberio
 
 ## Descrizione
 
 YourSport nasce con l'obiettivo di sostituire le tradizionali procedure manuali di gestione degli impianti sportivi, offrendo una piattaforma centralizzata per:
 
-•⁠  ⁠Prenotazione autonoma delle strutture sportive
-•⁠  ⁠Gestione delle prenotazioni
-•⁠  ⁠Amministrazione delle tariffe
-•⁠  ⁠Segnalazione e gestione dei guasti
-•⁠  ⁠Sospensione e riattivazione delle strutture
-•⁠  ⁠Gestione delle notifiche
-•⁠  ⁠Monitoraggio degli incassi previsti
-•⁠  ⁠Gestione del profilo utente
+- Prenotazione autonoma delle strutture sportive
+- Gestione delle prenotazioni
+- Amministrazione delle tariffe
+- Segnalazione e gestione dei guasti
+- Sospensione e riattivazione delle strutture
+- Gestione delle notifiche
+- Monitoraggio degli incassi previsti
+- Gestione del profilo utente
 
 Il sistema previene conflitti di prenotazione, automatizza la gestione delle disponibilità e supporta la comunicazione tra utenti e amministratori.
 
@@ -31,21 +31,21 @@ Il sistema previene conflitti di prenotazione, automatizza la gestione delle dis
 
 ### Utente Sportivo
 
-•⁠  ⁠Registrazione alla piattaforma
-•⁠  ⁠Ricerca avanzata delle strutture sportive
-•⁠  ⁠Prenotazione di strutture o posti disponibili
-•⁠  ⁠Visualizzazione e gestione delle proprie prenotazioni
-•⁠  ⁠Segnalazione di problemi e malfunzionamenti
-•⁠  ⁠Visualizzazione delle notifiche ricevute
-•⁠  ⁠Gestione del proprio profilo personale
+- Registrazione alla piattaforma
+- Ricerca avanzata delle strutture sportive
+- Prenotazione di strutture o posti disponibili
+- Visualizzazione e gestione delle proprie prenotazioni
+- Segnalazione di problemi e malfunzionamenti
+- Visualizzazione delle notifiche ricevute
+- Gestione del proprio profilo personale
 
 ### Amministratore
 
-•⁠  ⁠Gestione dei costi di prenotazione
-•⁠  ⁠Gestione delle segnalazioni ricevute
-•⁠  ⁠Sospensione e riattivazione delle strutture
-•⁠  ⁠Invio automatico di notifiche in caso di disservizi
-•⁠  ⁠Consultazione delle statistiche sugli incassi previsti
+- Gestione dei costi di prenotazione
+- Gestione delle segnalazioni ricevute
+- Sospensione e riattivazione delle strutture
+- Invio automatico di notifiche in caso di disservizi
+- Consultazione delle statistiche sugli incassi previsti
 
 ---
 
@@ -57,50 +57,50 @@ Il progetto è stato sviluppato seguendo un approccio iterativo e incrementale a
 
 #### GRASP
 
-•⁠  ⁠Controller
-•⁠  ⁠Creator
-•⁠  ⁠Information Expert
-•⁠  ⁠Pure Fabrication
-•⁠  ⁠High Cohesion
+- Controller
+- Creator
+- Information Expert
+- Pure Fabrication
+- High Cohesion
 
 #### GoF
 
-•⁠  ⁠Singleton
+- Singleton
 
 ### Principali Componenti
 
-•⁠  ⁠⁠ YourSport ⁠
+- `YourSport`
   - Facade Controller principale
   - Singleton del sistema
 
-•⁠  ⁠⁠ Sportivo ⁠
+- `Sportivo`
   - Utente registrato che utilizza le strutture
 
-•⁠  ⁠⁠ Admin ⁠
+- `Admin`
   - Gestore delle strutture sportive
 
-•⁠  ⁠⁠ Struttura ⁠
+- `Struttura`
   - Risorsa prenotabile
 
-•⁠  ⁠⁠ Prenotazione ⁠
+- `Prenotazione`
   - Gestione delle prenotazioni
 
-•⁠  ⁠⁠ Segnalazione ⁠
+- `Segnalazione`
   - Gestione dei problemi segnalati
 
-•⁠  ⁠⁠ Notifica ⁠
+- `Notifica`
   - Comunicazioni automatiche del sistema
 
-•⁠  ⁠⁠ GestorePrenotazioni ⁠
+- `GestorePrenotazioni`
   - Controller dedicato alla gestione prenotazioni
 
-•⁠  ⁠⁠ GestoreSegnalazioni ⁠
+- `GestoreSegnalazioni`
   - Controller dedicato alla gestione delle segnalazioni
 
-•⁠  ⁠⁠ GestoreStrutture ⁠
+- `GestoreStrutture`
   - Controller dedicato alla gestione delle strutture
 
-•⁠  ⁠⁠ GestoreNotifiche ⁠
+- `GestoreNotifiche`
   - Controller dedicato alle notifiche
 
 ---
@@ -132,12 +132,12 @@ L'intera struttura viene prenotata da un singolo utente per una specifica fascia
 
 Esempi:
 
-•⁠  ⁠Campo da Tennis
-•⁠  ⁠Campo da Calcetto
+- Campo da Tennis
+- Campo da Calcetto
 
 Tariffazione:
 
-•⁠  ⁠Tariffa ORARIO
+- Tariffa ORARIO
 
 ### Uso Condiviso
 
@@ -145,12 +145,12 @@ Più utenti possono prenotare contemporaneamente posti disponibili fino al raggi
 
 Esempi:
 
-•⁠  ⁠Piscina
-•⁠  ⁠Palestra
+- Piscina
+- Palestra
 
 Tariffazione:
 
-•⁠  ⁠Tariffa PERSONA
+- Tariffa PERSONA
 
 ---
 
@@ -158,9 +158,9 @@ Tariffazione:
 
 Il sistema utilizza file JSON per:
 
-•⁠  ⁠Salvataggio automatico dello stato del sistema
-•⁠  ⁠Ripristino dopo arresti anomali
-•⁠  ⁠Conservazione di utenti, prenotazioni, notifiche e segnalazioni
+- Salvataggio automatico dello stato del sistema
+- Ripristino dopo arresti anomali
+- Conservazione di utenti, prenotazioni, notifiche e segnalazioni
 
 ---
 
@@ -168,11 +168,11 @@ Il sistema utilizza file JSON per:
 
 ### Ambiente di Esecuzione
 
-•⁠  ⁠Java JDK 17 o superiore
+- Java JDK 17 o superiore
 
 ### Dipendenze
 
-•⁠  ⁠Libreria JSON per serializzazione/deserializzazione dei dati
+- Libreria JSON per serializzazione/deserializzazione dei dati
 
 ---
 
@@ -180,20 +180,20 @@ Il sistema utilizza file JSON per:
 
 ### Usabilità
 
-•⁠  ⁠Interfaccia semplice e differenziata in base al ruolo dell'utente
-•⁠  ⁠Feedback immediati sugli errori
+- Interfaccia semplice e differenziata in base al ruolo dell'utente
+- Feedback immediati sugli errori
 
 ### Affidabilità
 
-•⁠  ⁠Prevenzione dell'overbooking
-•⁠  ⁠Validazione degli input
-•⁠  ⁠Ripristino automatico dei dati
+- Prevenzione dell'overbooking
+- Validazione degli input
+- Ripristino automatico dei dati
 
 ### Sicurezza
 
-•⁠  ⁠Gestione autenticazione utenti
-•⁠  ⁠Protezione delle credenziali
-•⁠  ⁠Rispetto delle normative sulla privacy (GDPR)
+- Gestione autenticazione utenti
+- Protezione delle credenziali
+- Rispetto delle normative sulla privacy (GDPR)
 
 ---
 
@@ -201,11 +201,11 @@ Il sistema utilizza file JSON per:
 
 Per ciascun caso d'uso sono stati sviluppati test dedicati per verificare:
 
-•⁠  ⁠Correttezza delle funzionalità implementate
-•⁠  ⁠Gestione degli errori
-•⁠  ⁠Robustezza del sistema
-•⁠  ⁠Validazione degli input
-•⁠  ⁠Integrità dei dati
+- Correttezza delle funzionalità implementate
+- Gestione degli errori
+- Robustezza del sistema
+- Validazione degli input
+- Integrità dei dati
 
 I test coprono sia gli scenari principali sia i flussi alternativi e le condizioni di errore.
 
@@ -213,7 +213,7 @@ I test coprono sia gli scenari principali sia i flussi alternativi e le condizio
 
 ## Struttura del Progetto
 
-⁠ text
+```text
 src/
 │
 ├── model/
@@ -236,20 +236,20 @@ src/
 │
 └── test/
     └── Test Suite
- ⁠
+```
 
 ---
 
 ## Possibili Evoluzioni Future
 
-•⁠  ⁠Interfaccia grafica Web
-•⁠  ⁠Applicazione mobile Android/iOS
-•⁠  ⁠Sistema di pagamento online
-•⁠  ⁠Notifiche push
-•⁠  ⁠Dashboard amministrativa avanzata
-•⁠  ⁠Integrazione con sistemi di autenticazione esterni
-•⁠  ⁠Calendario condiviso delle prenotazioni
-•⁠  ⁠Reportistica avanzata e analytics
+- Interfaccia grafica Web
+- Applicazione mobile Android/iOS
+- Sistema di pagamento online
+- Notifiche push
+- Dashboard amministrativa avanzata
+- Integrazione con sistemi di autenticazione esterni
+- Calendario condiviso delle prenotazioni
+- Reportistica avanzata e analytics
 
 ---
 
